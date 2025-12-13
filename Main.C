@@ -38,7 +38,6 @@
 void handler_color_button(void); 
 uint32_t color_disp;
 uint32_t color_disp_old = 0;
-uint32_t IR_Data_tem = 0;
 uint8_t start_select_color = 0;
 //
 
@@ -141,46 +140,29 @@ void handler_color_button(void)
 	uint8_t tm_cnt = 0;
 
 	uint8_t i;
+	/* sample button avoid noise */
 	mDelaymS(1);
-
 	if(BUT_DON_DA == 0) {
-	stat_but_dd = stat_but_dd + 1;
-//		if(stat_but_dd < TIME_SAMLE)
-//			stat_but_dd = stat_but_dd + 1;
-//		else 
-//			stat_but_dd = 0;
+		stat_but_dd = stat_but_dd + 1;
 	}		
 	else 
 		stat_but_dd = 0;
-	   //
 	if(BUT_MUSIC == 0) {
-	stat_but_music = stat_but_music + 1;
-//		if(stat_but_music < TIME_SAMLE)
-//			stat_but_music = stat_but_music + 1;
-//		else 
-//			stat_but_music = 0;
+		stat_but_music = stat_but_music + 1;
 	}		
 	else 
 		stat_but_music = 0;
-	 //
+	 
 	if(BUT_SPEED == 0) {
-	stat_but_sp = stat_but_sp + 1;
-//		if(stat_but_sp < TIME_SAMLE)
-//			stat_but_sp = stat_but_sp + 1;
-//		else 
-//			stat_but_sp = 0;
+		stat_but_sp = stat_but_sp + 1;
+
 	}		
 	else 
 		stat_but_sp = 0;
-
-
+	// pressed loop
 	if( (stat_but_dd >= (TIME_SAMLE) && stat_but_music < (TIME_SAMLE) && stat_but_sp < (TIME_SAMLE)) ||
 		(stat_but_music >= (TIME_SAMLE) && stat_but_dd < (TIME_SAMLE) && stat_but_sp < (TIME_SAMLE)) ||
 		(stat_but_sp >= (TIME_SAMLE) && stat_but_dd < (TIME_SAMLE) && stat_but_music < (TIME_SAMLE)) ) {
-
-//	if( (stat_but_dd >= (TIME_SAMLE) && stat_but_music < (TIME_SAMLE) && stat_but_sp < (TIME_SAMLE)) ||
-//		(stat_but_music >= (TIME_SAMLE) && stat_but_dd < (TIME_SAMLE) && stat_but_sp < (TIME_SAMLE)) ||
-//		(stat_but_sp >= (TIME_SAMLE) && stat_but_dd < (TIME_SAMLE) && stat_but_music < (TIME_SAMLE)) ) {
 
 		if(start_select_color == 0) {
 		    Flag_IR_Convert = 0;
@@ -227,6 +209,7 @@ void handler_color_button(void)
 		}
 	} 	
 	else {
+		start_select_color = 0;	  /* if press button but not press key before release the button then start_select_color not reset to 0 in pressed loop*/
 		if(Flag_IR_Convert)
 		{
 		    Flag_IR_Convert = 0;
