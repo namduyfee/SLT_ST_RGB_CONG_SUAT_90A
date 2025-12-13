@@ -1,0 +1,186 @@
+C51 COMPILER V9.01   TIMER0                                                                12/13/2025 09:59:39 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE TIMER0
+OBJECT MODULE PLACED IN Timer0.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Project\Source\Timer0.c LARGE ROM(COMPACT) OPTIMIZE(SIZE) BROWSE NOAREGS IN
+                    -CDIR(.\Project\include) DEBUG OBJECTEXTEND PRINT(.\Timer0.lst) OBJECT(Timer0.obj)
+
+line level    source
+
+   1          #include "CH554.H"
+   2          #include "Timer0.H"
+   3          #include "Effect.h"
+   4          //#include <REGX51.H>
+   5          sbit    LED=P1^4;
+   6          sbit    LED_B = P3^1;
+   7          sbit    LED_G = P1^0;
+   8          sbit    LED_R = P1^7;
+   9          
+  10          extern uint8_t idata Flag_IR_Convert, Flag_Speed_Effect;
+  11          extern uint32_t xdata IR_Data;
+  12          static uint8_t idata IndexBit;
+  13          extern RGB_PIN  RedGreenBlue[3];
+  14          static uint8_t idata CurrentDuty = 0;
+  15          uint8_t xdata u8TH0_Tmp,u8TL0_Tmp,u8TH1_Tmp,u8TL1_Tmp;
+  16          static uint8_t idata CurrentCount =0;
+  17          idata UINT8 Flag_Capture = 0;
+  18          idata UINT16 Time_Capture = 0;
+  19          uint8_t Effect_Time4;
+  20          
+  21          /* timer0 config
+  22                  - Nguon clock
+  23                   + bT0_CT = 0 -> clock noi
+  24                   + bT0_CT = 1 -> clock ngoai vao chan P3.4
+  25                  - Cau hinh bo chia
+  26                          |               bT0_CLK |       bTMR_CLK        |
+  27                          |                       0                       |                                               |       Ftimer = Fsys/12
+  28                          |                       1                       |                       0                       |       Ftimer = Fsys/4
+  29                          |                       1                       |                       1                       |       Ftimer = F
+  30                  - Cau hinh bo dem
+  31                          |       bT0_GATE        |                       TR0             |       INT0(P3.2)      |
+  32                          |                       0                       |                       0                       |                                                       |       Khong cho phep clock dua vao bo dem
+  33                          |                       0                       |                       1                       |                                                       | Clock duoc dua vao bo dem, gia trij thanh ghi TH0_TL0 se duoc tang len 1 moi k
+             -hi co 1 xung
+  34                                                                                                                                                                                  |       Khi tran bi TF0 = 1
+  35                          |                       1                       |                       1                       |                               1                       | Clock duoc dua vao bo dem
+  36                          */
+  37          void Timer0_Init(uint16_t Counter)
+  38          {
+  39   1          T2MOD &= ~bT0_CLK;
+  40   1          TMOD &= ~(bT0_CT | bT0_GATE | bT0_M1); //timer mode
+  41   1          TMOD |= bT0_M0;
+  42   1                      u8TH0_Tmp = (65536-Counter)>>8;
+  43   1                      u8TL0_Tmp = (65536-Counter)&0xff;  
+  44   1                TH0 = u8TH0_Tmp;
+  45   1          TL0 = u8TL0_Tmp;    
+  46   1                      ET0 = 1;
+  47   1      //              TR0 = 1;
+  48   1      }
+  49          void Timer1_Init(uint16_t Counter)
+  50          {
+  51   1              T2MOD &= ~bT1_CLK;
+  52   1              TMOD &= ~(bT1_CT | bT1_GATE | bT1_M1);
+  53   1              TMOD |= bT1_M0;
+C51 COMPILER V9.01   TIMER0                                                                12/13/2025 09:59:39 PAGE 2   
+
+  54   1              u8TH1_Tmp = (65536-Counter)>>8;
+  55   1              u8TL1_Tmp = (65536-Counter)&0xff;  
+  56   1              TH1 = u8TH1_Tmp;
+  57   1        TL1 = u8TL1_Tmp; 
+  58   1        ET1 = 1;                                                                                                              //enable Timer1 interrupt_      
+  59   1              TR1 = 1;                                                                                                                //Timer1 run    
+  60   1      }
+  61          //void Timer2_Init()
+  62          //{
+  63          //    T2MOD |= (bTMR_CLK | bT2_CLK); //clock = Fsys
+  64          //              RCAP2H = 0xA2;
+  65          //              RCAP2L = 0x40;
+  66          //              TH2 = 0xA2;
+  67          //              TL2 = 0x40;
+  68          //              TR2 = 1;
+  69          //              ET2 = 1;
+  70          //}
+  71          void Timer2_InputCapture_Init()
+  72          {
+  73   1              RCLK = 0;
+  74   1              TCLK = 0;                                                               // Set the bits RCLK and TCLK in T2CON to 0, and select the non-serial port baud rate g
+             -enerator mode.
+  75   1              C_T2 = 0;
+  76   1              T2MOD &= ~bT2_CLK;
+  77   1      //      T2MOD &= ~bT2_CAP_M1;                   // 01: from any edge to any edge (level changing) / x0 suon xuong, 01 ca 2 suon
+             -, 11 suon len 
+  78   1              T2MOD |= bT2_CAP_M1;
+  79   1              T2MOD |= bT2_CAP_M0;                            // Capture suon len
+  80   1              EXEN2 = 1;
+  81   1              CP_RL2 = 1;
+  82   1              TL2 = 0;
+  83   1              TH2 = 0;
+  84   1              PIN_FUNC |= bT2EX_PIN_X; // ánh xa chân bT2EX_ dê su dung chan RST
+  85   1              ET2 = 1;
+  86   1      //      TR2 = 1;
+  87   1      }
+  88          void Timer0_Update(void) interrupt INT_NO_TMR0 
+  89          {
+  90   1                      TH0 = u8TH0_Tmp;
+  91   1          TL0 = u8TL0_Tmp;  
+  92   1          if(++CurrentDuty>MAX_STEP)
+  93   1                              CurrentDuty = 0;        
+  94   1                      GPIO_RED = (RedGreenBlue[0].Duty > CurrentDuty);
+  95   1                      GPIO_GREEN = (RedGreenBlue[1].Duty > CurrentDuty);
+  96   1                      GPIO_BLUE = (RedGreenBlue[2].Duty > CurrentDuty);
+  97   1                      Effect_Time4++;
+  98   1      }
+  99          void Timer1_Update(void) interrupt INT_NO_TMR1 using 3
+ 100          {
+ 101   1              TH1 = u8TH1_Tmp;
+ 102   1              TL1 = u8TL1_Tmp;
+ 103   1              if(++CurrentCount>= 5)
+ 104   1              {
+ 105   2          Flag_Speed_Effect = 1;
+ 106   2                      CurrentCount =0;
+ 107   2              }
+ 108   1      }
+ 109          void Timer2_Capture(void) interrupt INT_NO_TMR2 using 2
+ 110          {
+ 111   1              if((EXF2==1)&&(Flag_Capture==0)) // capture suon len
+ 112   1              {
+ 113   2                      EXF2 = 0;
+C51 COMPILER V9.01   TIMER0                                                                12/13/2025 09:59:39 PAGE 3   
+
+ 114   2                      TR2 = 0;
+ 115   2                      T2MOD &= ~bT2_CAP_M0;                                                           // set capture suon xuong
+ 116   2                      Flag_Capture =1;
+ 117   2                      TL2 = 0;
+ 118   2                      TH2 = 0;
+ 119   2                      TR2 = 1;
+ 120   2              }
+ 121   1              else if(EXF2 & Flag_Capture)                                    // capture suon xuong
+ 122   1              {
+ 123   2                      EXF2 = 0;
+ 124   2                      T2MOD |= (bT2_CAP_M1|bT2_CAP_M0);                               // set capture suon len
+ 125   2                      Flag_Capture =0;
+ 126   2                      Time_Capture = RCAP2H;
+ 127   2                      Time_Capture = (Time_Capture << 8) | RCAP2L;
+ 128   2      //              if(Time_Capture < 2000)
+ 129   2      //              {
+ 130   2      //                      IR_Data<<=1;
+ 131   2      //                      if(Time_Capture > 1000)
+ 132   2      //                                      IR_Data|=1;
+ 133   2      //                      if(++IndexBit>=32)
+ 134   2      //                                      Flag_IR_Convert=1;
+ 135   2      //              }
+ 136   2                      if(Time_Capture < 4000)
+ 137   2                      {
+ 138   3                              IR_Data<<=1;
+ 139   3                              if(Time_Capture > 2000)
+ 140   3                                              IR_Data|=1;
+ 141   3                              if(++IndexBit>=32)
+ 142   3                                              Flag_IR_Convert=1;
+ 143   3                      }
+ 144   2                      else
+ 145   2                      {       
+ 146   3                              IR_Data  = 0;
+ 147   3                              IndexBit = 0;
+ 148   3                      }
+ 149   2                      TR2 = 0;
+ 150   2              }
+ 151   1              if(TF2)
+ 152   1                      {
+ 153   2                              TF2 = 0;
+ 154   2                      }
+ 155   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    505    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =      5       4
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =      6    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

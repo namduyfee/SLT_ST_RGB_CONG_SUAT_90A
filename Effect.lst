@@ -1,0 +1,937 @@
+C51 COMPILER V9.01   EFFECT                                                                12/13/2025 09:59:39 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE EFFECT
+OBJECT MODULE PLACED IN Effect.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Project\Source\Effect.c LARGE ROM(COMPACT) OPTIMIZE(SIZE) BROWSE NOAREGS IN
+                    -CDIR(.\Project\include) DEBUG OBJECTEXTEND PRINT(.\Effect.lst) OBJECT(Effect.obj)
+
+line level    source
+
+   1          #include "Effect.h"
+   2          #include "savedata.h"
+   3          #include "stdlib.h"
+   4          #include "Effect_RGBDance.h"
+   5          #include "Debug.H"
+   6          #include <stdio.h>
+   7          RGB_PIN  RedGreenBlue[3];
+   8          extern uint8_t idata ADC_Value;
+   9          uint8_t Delay_Music_MONO=10;
+  10          extern RGB_DATA RGB_DataRam;
+  11          const uint32_t xdata ColorTable[7] = {RGB_RED, RGB_GREEN, RGB_BLUE, RGB_YELLOW, RGB_CYAN, RGB_PURPLE, RGB_
+             -WHITE};
+  12          extern uint32_t xdata i,j;
+  13          extern uint8_t idata Run_Effect_Done;
+  14          static  uint8_t xdata k=0, m=0, Flag_Button =0,Flag_Music=0,__Flag_mode=0;
+  15          static uint16_t xdata  t=0;
+  16          static uint8_t xdata _dBLast = 0;
+  17          extern uint8_t xdata _FlagMusic,_FlagFade;
+  18          static const uint8_t xdata chu_so[10] = {0xC0,0xF9,0xA4,0xB0,0x99,0x92,0x82,0xF8,0x80,0x90};
+  19          extern uint8_t Effect_Time4;
+  20          extern uint8_t xdata u8TH1_Tmp,u8TL1_Tmp;
+  21          uint8_t idata But_Count = 0;
+  22          static const uint8_t xdata Prog_Auto[4][7] =
+  23          {  //Chuong trinh hieu ung cho cac che do auto khac nhau
+  24                 1, 2, 3, 4, 5, 6,7,    //Auto 1
+  25                 3, 5, 3, 5, 3, 5,3,    //Auto 2
+  26                 6, 3, 5, 6, 3, 5,6,    //Auto 3
+  27                 7, 5, 6, 7, 5, 6,7,    //Auto 4
+  28          };
+  29          extern uint8_t xdata DataSave[11];
+  30          void RGB_PinInit(void)
+  31          {
+  32   1          RedGreenBlue[0].Duty      = 0;
+  33   1          RedGreenBlue[1].Duty      = 0;
+  34   1          RedGreenBlue[2].Duty      = 0;
+  35   1      }
+  36          uint8_t Audio_Convert(uint8_t ADC_Value_In)
+  37          {
+  38   1          uint8_t _dBData;
+  39   1          _dBData = ((ADC_Value_In/value)*2);
+  40   1      //              if(_dBData >254)
+  41   1      //                      _dBData = 255;
+  42   1          if(_dBData > _dBLast)
+  43   1                      {
+  44   2                               Effect_Time4 = 0;
+  45   2                               _dBLast = _dBData;
+  46   2          }
+  47   1                      else
+  48   1                      {
+  49   2                               if(Effect_Time4>Delay_Music_MONO)
+  50   2                                      {
+  51   3                                              Effect_Time4 = 0;
+  52   3                                              if(_dBLast > _dBData)_dBLast--;  //Lam muot khi bien do giam
+  53   3                                      }
+C51 COMPILER V9.01   EFFECT                                                                12/13/2025 09:59:39 PAGE 2   
+
+  54   2          }
+  55   1          return _dBLast;
+  56   1      }
+  57           uint8_t LastMode = 0xff;
+  58          void RGB_SetModeSpeed(uint8_t Mode)
+  59          {
+  60   1              if(LastMode!=Mode)
+  61   1              {
+  62   2                      TR1 = 0;
+  63   2                      if(Mode == 1)
+  64   2                              T2MOD |= (bTMR_CLK | bT1_CLK);
+  65   2                      else if(Mode == 4)
+  66   2                      {
+  67   3                              T2MOD |= bT1_CLK;
+  68   3                              T2MOD &= ~bTMR_CLK;
+  69   3                      }
+  70   2                      else
+  71   2                              T2MOD &= ~bT1_CLK;
+  72   2                      TR1 = 1;
+  73   2                      LastMode = Mode;
+  74   2              }
+  75   1      //    if(Mode < 8)
+  76   1      //    {
+  77   1      //        T3CON &= ~0x07; T3CON |= Mode&0x07;   //Bo chia tan
+  78   1      //    }
+  79   1      }
+  80          void RGB_SetSpeed(uint8_t Speed)
+  81          {
+  82   1          uint16_t Temp;
+  83   1          if(Speed < MIN_SPEED || Speed > MAX_SPEED)return;
+  84   1          TR1 = 0;
+  85   1          Temp = VALUE_TEMP*((MAX_SPEED+1)-Speed);
+  86   1                      u8TH1_Tmp = (65536-Temp)/256;
+  87   1                      u8TL1_Tmp = (65536-Temp)%256;  
+  88   1                      TH1 = u8TH1_Tmp;
+  89   1                      TL1 = u8TL1_Tmp;  
+  90   1          ET1 = 1;           //Cau hinh ngat
+  91   1          TR1 = 1;
+  92   1      }
+  93          void RGB_SetBright(uint8_t Brightness)
+  94          {
+  95   1          RedGreenBlue[RED].Duty = (uint16_t)(RGB_DataRam.Color.DutyRed * Brightness) / MAX_BRIGHTNESS;
+  96   1          RedGreenBlue[GREEN].Duty = (uint16_t)(RGB_DataRam.Color.DutyGreen * Brightness) / MAX_BRIGHTNESS;
+  97   1          RedGreenBlue[BLUE].Duty = (uint16_t)(RGB_DataRam.Color.DutyBlue * Brightness) / MAX_BRIGHTNESS;
+  98   1      //     RedGreenBlue[RED].Duty =(uint16_t)(( (uint16_t)(RGB_DataRam.Color.DutyRed * Brightness) / MAX_BRIGH
+             -TNESS)*(CONST_BRIGHTNESS*(float)Brightness));
+  99   1      //    RedGreenBlue[GREEN].Duty = (uint16_t)(( (uint16_t)(RGB_DataRam.Color.DutyGreen * Brightness) / MAX_B
+             -RIGHTNESS)*(CONST_BRIGHTNESS*(float)Brightness));
+ 100   1      //    RedGreenBlue[BLUE].Duty = (uint16_t)(( (uint16_t)(RGB_DataRam.Color.DutyBlue * Brightness) / MAX_BRI
+             -GHTNESS)*(CONST_BRIGHTNESS*(float)Brightness));
+ 101   1      }
+ 102          void RGB_SetColor(uint32_t Color, uint8_t Brightness)
+ 103          {
+ 104   1          RGB_DataRam.Color.DutyRed = (uint8_t)(Color>>16);
+ 105   1          RGB_DataRam.Color.DutyGreen = (uint8_t)(Color>>8);
+ 106   1          RGB_DataRam.Color.DutyBlue = (uint8_t)(Color);
+ 107   1          if(RGB_DataRam.Effect == 0)
+ 108   1          {
+ 109   2             // RGB_DataRom.Color = RGB_DataRam.Color; //Save
+ 110   2                                      //RGB_DataRam.Effect = 0;
+ 111   2                                              //IAP_AP_Erase_Pages(17920,1);
+ 112   2                                              SAVEDATA();
+C51 COMPILER V9.01   EFFECT                                                                12/13/2025 09:59:39 PAGE 3   
+
+ 113   2              //RGB_DataRom.Effect = 0;
+ 114   2          }
+ 115   1          RGB_SetBright(Brightness);
+ 116   1      }
+ 117          void SetColor(uint8_t color, uint8_t duty, uint8_t bright)
+ 118          {
+ 119   1          if(color == RED)RGB_DataRam.Color.DutyRed = duty;
+ 120   1          else if(color == GREEN)RGB_DataRam.Color.DutyGreen = duty;
+ 121   1          else if(color == BLUE)RGB_DataRam.Color.DutyBlue = duty;
+ 122   1          else return;
+ 123   1                      if(!_FlagMusic)
+ 124   1                              RedGreenBlue[color].Duty = (uint16_t)(duty * bright) / MAX_BRIGHTNESS;
+ 125   1                      else
+ 126   1                              RedGreenBlue[color].Duty = duty;//(uint16_t)(duty * bright) / MAX_BRIGHTNESS;
+ 127   1      }
+ 128          void LED7_OutData(uint8_t Data)
+ 129          {
+ 130   1        LED7_DATA_A  =  ((Data&0x01)!=0)?LED7_DATA_ON:LED7_DATA_OFF;
+ 131   1        LED7_DATA_B  =  ((Data&0x02)!=0)?LED7_DATA_ON:LED7_DATA_OFF;
+ 132   1        LED7_DATA_C  =  ((Data&0x04)!=0)?LED7_DATA_ON:LED7_DATA_OFF;
+ 133   1        LED7_DATA_D  =  ((Data&0x08)!=0)?LED7_DATA_ON:LED7_DATA_OFF;
+ 134   1        LED7_DATA_E  =  ((Data&0x10)!=0)?LED7_DATA_ON:LED7_DATA_OFF;
+ 135   1        LED7_DATA_F  =  ((Data&0x20)!=0)?LED7_DATA_ON:LED7_DATA_OFF;
+ 136   1        LED7_DATA_G  =  ((Data&0x40)!=0)?LED7_DATA_ON:LED7_DATA_OFF;
+ 137   1      }
+ 138          void Display_LED_7(uint8_t Num)
+ 139          {
+ 140   1          if(Num > 9)return;
+ 141   1          LED7_OutData(chu_so[Num]);
+ 142   1      }
+ 143          void RGB_OnDisplay(void)
+ 144          {
+ 145   1          TR0 = 1;
+ 146   1      }
+ 147          void RGB_OffDisplay(void)
+ 148          {
+ 149   1          TR0 = 0;
+ 150   1                      GPIO_RED_OFF();
+ 151   1                      GPIO_GREEN_OFF();
+ 152   1                      GPIO_BLUE_OFF();
+ 153   1      }
+ 154          void SetProcessAutoEffect(uint8_t AutoEffect)    //Save  o day
+ 155          {
+ 156   1           RGB_DataRam.LastEffect = 2;
+ 157   1           RGB_DataRam.AutoEffect = AutoEffect;
+ 158   1           RGB_DataRam.Effect = Prog_Auto[AutoEffect-1][0];
+ 159   1      //     RGB_DataRom.AutoEffect = RGB_DataRam.AutoEffect;
+ 160   1      //     RGB_DataRom.Effect = RGB_DataRam.Effect;
+ 161   1                       //IAP_AP_Erase_Pages(17920,1);
+ 162   1                       SAVEDATA();
+ 163   1           i = j = m = 0;
+ 164   1           RGB_SetColor(RGB_BLACK, RGB_DataRam.Brightness);
+ 165   1      }
+ 166          FLAG_KEY KEY_GetKey (void)
+ 167          {
+ 168   1              uint8_t i=0;
+ 169   1              if (RGB_DataRam.Flags)
+ 170   1              {
+ 171   2                      if ((BUT_DON_DA==0)&&(BUT_SPEED!=0)&&(BUT_MUSIC!=0))
+ 172   2                      {
+ 173   3                              mDelaymS(40);
+ 174   3                              if ((BUT_DON_DA==0)&&(BUT_SPEED!=0)&&(BUT_MUSIC!=0))
+C51 COMPILER V9.01   EFFECT                                                                12/13/2025 09:59:39 PAGE 4   
+
+ 175   3                                      return __KEY_FLASH;
+ 176   3      //                      {
+ 177   3      //                              for (i=0;i<50;i++)
+ 178   3      //                              {
+ 179   3      //                               if (!((BUT_DON_DA==0)&&(BUT_SPEED!=0)&&(BUT_MUSIC!=0)))
+ 180   3      //                                       break;
+ 181   3      //                               mDelaymS(10);
+ 182   3      //                              }
+ 183   3      //                      }
+ 184   3      //                      if (i>=50) return __KEY_FLASH_LONG;
+ 185   3      //              else return __KEY_FLASH;
+ 186   3                      }
+ 187   2      
+ 188   2                      else if ((BUT_DON_DA!=0)&&(BUT_SPEED==0)&&(BUT_MUSIC!=0))
+ 189   2                      {
+ 190   3                              mDelaymS(40);
+ 191   3                              if ((BUT_DON_DA!=0)&&(BUT_SPEED==0)&&(BUT_MUSIC!=0))
+ 192   3                                      return __KEY_SPEED;
+ 193   3      //                      {
+ 194   3      //                              for (i=0;i<50;i++)
+ 195   3      //                              {
+ 196   3      //                               if (!((BUT_DON_DA!=0)&&(BUT_SPEED==0)&&(BUT_MUSIC!=0)))
+ 197   3      //                                       break;
+ 198   3      //                               mDelaymS(10);
+ 199   3      //                              }
+ 200   3      //                      }
+ 201   3      //                      if (i>=50) return __NO_KEY;
+ 202   3      //                      else return __KEY_SPEED;
+ 203   3                      }
+ 204   2                      else if ((BUT_DON_DA!=0)&&(BUT_SPEED!=0)&&(BUT_MUSIC==0))
+ 205   2                      {
+ 206   3                              mDelaymS(40);
+ 207   3                              if ((BUT_DON_DA!=0)&&(BUT_SPEED!=0)&&(BUT_MUSIC==0))
+ 208   3                                      return __KEY_MUSIC;
+ 209   3      //                      {
+ 210   3      //                              for (i=0;i<50;i++)
+ 211   3      //                              {
+ 212   3      //                               if (!((BUT_DON_DA!=0)&&(BUT_SPEED!=0)&&(BUT_MUSIC==0)))
+ 213   3      //                                       break;
+ 214   3      //                               mDelaymS(10);
+ 215   3      //                              }
+ 216   3      //                      }
+ 217   3      //                      if (i>=50) return __NO_KEY;
+ 218   3      //                      else return __KEY_MUSIC;
+ 219   3                      }
+ 220   2              }
+ 221   1              return __NO_KEY;
+ 222   1      }
+ 223          void Check_Button(uint8_t Bright)                                                                       // han nay chua xu ly
+ 224          {
+ 225   1              uint8_t Key=KEY_GetKey();
+ 226   1              switch (Key)
+ 227   1              {
+ 228   2          case __KEY_FLASH:
+ 229   2          {
+ 230   3                              But_Count++;
+ 231   3                              if(But_Count >= 7) //DA
+ 232   3                              {
+ 233   4                                      if (_FlagMusic) _FlagMusic=0;
+ 234   4              if(RGB_DataRam.AutoEffect==6)
+ 235   4               RGB_OnDisplay();
+ 236   4              if(RGB_DataRam.LastEffect == 2)
+C51 COMPILER V9.01   EFFECT                                                                12/13/2025 09:59:39 PAGE 5   
+
+ 237   4                RGB_DataRam.Effect = RGB_DataRam.SaveEffect;
+ 238   4                      else
+ 239   4              {
+ 240   5                                              if(++RGB_DataRam.Effect > 7)
+ 241   5                                              {
+ 242   6                                                      But_Count = 0;
+ 243   6                                                      RGB_DataRam.Effect = 1;
+ 244   6                                              }
+ 245   5                                                      RGB_DataRam.SaveEffect = RGB_DataRam.Effect;
+ 246   5              }
+ 247   4              RGB_DataRam.LastEffect = 1;
+ 248   4              RGB_DataRam.AutoEffect = 0;
+ 249   4              i = j = m = 0;
+ 250   4              RGB_SetColor(RGB_BLACK, RGB_DataRam.Brightness);
+ 251   4                                      SAVEDATA();
+ 252   4                              }
+ 253   3                              if(But_Count < 7) //DON
+ 254   3                              {
+ 255   4                                      if (RGB_DataRam.Effect == 10)
+ 256   4                                      {
+ 257   5                                              Delay_Music_MONO=20;
+ 258   5                                              RGB_DataRam.Effect = 0;
+ 259   5                                              //if (_FlagFade==0)_FlagFade=1;
+ 260   5                                              if(RGB_DataRam.AutoEffect==6)
+ 261   5                              RGB_OnDisplay();
+ 262   5                if(++k>6)k=0;
+ 263   5                              RGB_SetColor(ColorTable[k],Bright);
+ 264   5                                              if(_FlagFade == 1) 
+ 265   5                                                      RGB_DataRam.AutoEffect=8;
+ 266   5                                              else
+ 267   5                                                      RGB_DataRam.AutoEffect=0;
+ 268   5                                      }
+ 269   4                                      else
+ 270   4                                      {
+ 271   5                                              RGB_DataRam.Effect = 0;
+ 272   5                                              if(RGB_DataRam.AutoEffect==6)
+ 273   5                              RGB_OnDisplay();
+ 274   5                if(++k>6)k=0;
+ 275   5                              RGB_SetColor(ColorTable[k],RGB_DataRam.Brightness);
+ 276   5                                              if(_FlagFade == 1) 
+ 277   5                                                      RGB_DataRam.AutoEffect=8;
+ 278   5                                              else
+ 279   5                                                      RGB_DataRam.AutoEffect=0;
+ 280   5                                      }
+ 281   4                                      SAVEDATA();
+ 282   4                              }
+ 283   3                              break;
+ 284   3                      }
+ 285   2      //    case __KEY_MONO:
+ 286   2      //    {
+ 287   2      //                              if (RGB_DataRam.Effect == 10)
+ 288   2      //                              {
+ 289   2      //                                      Delay_Music_MONO=20;
+ 290   2      //                                      RGB_DataRam.Effect = 0;
+ 291   2      //                                      //if (_FlagFade==0)_FlagFade=1;
+ 292   2      //                                      if(RGB_DataRam.AutoEffect==6)
+ 293   2      //                      RGB_OnDisplay();
+ 294   2      //                if(++k>6)k=0;
+ 295   2      //                              RGB_SetColor(ColorTable[k],Bright);
+ 296   2      //                                      if(_FlagFade == 1) 
+ 297   2      //                                              RGB_DataRam.AutoEffect=8;
+ 298   2      //                                      else
+C51 COMPILER V9.01   EFFECT                                                                12/13/2025 09:59:39 PAGE 6   
+
+ 299   2      //                                              RGB_DataRam.AutoEffect=0;
+ 300   2      //                              }
+ 301   2      //                              else
+ 302   2      //                              {
+ 303   2      //                                      RGB_DataRam.Effect = 0;
+ 304   2      //                                      if(RGB_DataRam.AutoEffect==6)
+ 305   2      //                      RGB_OnDisplay();
+ 306   2      //                if(++k>6)k=0;
+ 307   2      //                              RGB_SetColor(ColorTable[k],RGB_DataRam.Brightness);
+ 308   2      //                                      if(_FlagFade == 1) 
+ 309   2      //                                              RGB_DataRam.AutoEffect=8;
+ 310   2      //                                      else
+ 311   2      //                                              RGB_DataRam.AutoEffect=0;
+ 312   2      //                              }
+ 313   2      //                              SAVEDATA();
+ 314   2      //                              break;
+ 315   2      //    }
+ 316   2                      case __KEY_MONO_LONG:
+ 317   2          {
+ 318   3                              
+ 319   3                                      _FlagFade = !_FlagFade;
+ 320   3                                      if(_FlagFade == 1) 
+ 321   3                                              RGB_DataRam.AutoEffect=8;
+ 322   3                                      else
+ 323   3                                              RGB_DataRam.AutoEffect=0;                       
+ 324   3                                      RGB_SetColor(RGB_RED,RGB_DataRam.Brightness);
+ 325   3                                      SAVEDATA();
+ 326   3                              break;
+ 327   3                      }
+ 328   2          case __KEY_MUSIC:
+ 329   2          {
+ 330   3                              if (++__Flag_mode>=2)
+ 331   3                                      __Flag_mode=0;
+ 332   3                              if (__Flag_mode==1)
+ 333   3                              {
+ 334   4      
+ 335   4              if (_FlagMusic) _FlagMusic=0;
+ 336   4                      RGB_DataRam.LastEffect = 2;
+ 337   4                      RGB_DataRam.AutoEffect = 6;
+ 338   4                      RGB_DataRam.Effect = 10;
+ 339   4                      i = j = m = 0;
+ 340   4               RGB_SetColor(RGB_BLACK, RGB_DataRam.Brightness); 
+ 341   4                              }
+ 342   3                              else
+ 343   3                              {
+ 344   4                                              if (_FlagMusic) _FlagMusic=0;
+ 345   4                      RGB_DataRam.LastEffect = 2;
+ 346   4                      RGB_DataRam.AutoEffect = 7;
+ 347   4                      RGB_DataRam.Effect = 10;
+ 348   4                      i = j = m = 0;
+ 349   4               RGB_SetColor(RGB_BLACK, RGB_DataRam.Brightness); 
+ 350   4                              }
+ 351   3                              SAVEDATA();
+ 352   3                              break;
+ 353   3          }
+ 354   2          case __KEY_SPEED:
+ 355   2          {
+ 356   3             if (RGB_DataRam.Effect == 0)
+ 357   3             {
+ 358   4               if(++RGB_DataRam.Brightness > MAX_BRIGHTNESS)
+ 359   4               {
+ 360   5                   RGB_DataRam.Brightness = MIN_BRIGHTNESS;
+C51 COMPILER V9.01   EFFECT                                                                12/13/2025 09:59:39 PAGE 7   
+
+ 361   5               }
+ 362   4               if(!RGB_DataRam.Effect)
+ 363   4                  RGB_SetBright(RGB_DataRam.Brightness);
+ 364   4             }
+ 365   3             else
+ 366   3             {
+ 367   4                                       RGB_DataRam.Speed += 2;
+ 368   4              if(RGB_DataRam.Speed > MAX_SPEED)
+ 369   4              {
+ 370   5                   RGB_DataRam.Speed = MIN_SPEED;
+ 371   5              }
+ 372   4               RGB_SetSpeed(RGB_DataRam.Speed);
+ 373   4             }
+ 374   3                              SAVEDATA();
+ 375   3                              break;
+ 376   3          }
+ 377   2              }
+ 378   1              while ((Key=KEY_GetKey())!=__NO_KEY);
+ 379   1      }
+ 380          
+ 381          void RGB_ProcessKey(uint32_t Key, uint8_t Bright)
+ 382          {
+ 383   1        if((Key==KEY_RED_MH)||(Key==KEY_RED))
+ 384   1          {
+ 385   2             RGB_DataRam.Effect = 0;
+ 386   2             RGB_SetColor(RGB_RED, Bright);
+ 387   2                              if (_FlagMusic) _FlagMusic=0;
+ 388   2          }
+ 389   1          else if((Key==KEY_BLUE_MH)||(Key==KEY_BLUE))
+ 390   1          {
+ 391   2             RGB_DataRam.Effect = 0;
+ 392   2             RGB_SetColor(RGB_BLUE, Bright);
+ 393   2                              if (_FlagMusic) _FlagMusic=0;
+ 394   2          }
+ 395   1          else if((Key==KEY_GREEN_MH)||(Key==KEY_GREEN))
+ 396   1          {
+ 397   2             RGB_DataRam.Effect = 0;
+ 398   2             RGB_SetColor(RGB_GREEN, Bright);
+ 399   2                              if (_FlagMusic) _FlagMusic=0;
+ 400   2          }
+ 401   1          else if((Key==KEY_WHITE_MH)||(Key==KEY_WHITE))
+ 402   1          {
+ 403   2             RGB_DataRam.Effect = 0;
+ 404   2             RGB_SetColor(RGB_WHITE, Bright);
+ 405   2                              if (_FlagMusic) _FlagMusic=0;
+ 406   2          }
+ 407   1          else if((Key==KEY_ORANGE_MH)||(Key==KEY_ORANGE))
+ 408   1          {
+ 409   2             RGB_DataRam.Effect = 0;
+ 410   2             RGB_SetColor(RGB_ORANGE, Bright);
+ 411   2                              if (_FlagMusic) _FlagMusic=0;
+ 412   2          }
+ 413   1          else if((Key==KEY_YELLOW_MH)||(Key==KEY_YELLOW))
+ 414   1          {
+ 415   2             RGB_DataRam.Effect = 0;
+ 416   2             RGB_SetColor(RGB_YELLOW, Bright);
+ 417   2                              if (_FlagMusic) _FlagMusic=0;
+ 418   2          }
+ 419   1          else if((Key==KEY_CYAN_MH)||(Key==KEY_CYAN))
+ 420   1          {
+ 421   2             RGB_DataRam.Effect = 0;
+ 422   2             RGB_SetColor(RGB_CYAN, Bright);
+C51 COMPILER V9.01   EFFECT                                                                12/13/2025 09:59:39 PAGE 8   
+
+ 423   2                              if (_FlagMusic) _FlagMusic=0;
+ 424   2          }
+ 425   1          else if((Key==KEY_PURPLE_MH)||(Key==KEY_PURPLE))
+ 426   1          {
+ 427   2             RGB_DataRam.Effect = 0;
+ 428   2             RGB_SetColor(RGB_PURPLE, Bright);
+ 429   2                              if (_FlagMusic) _FlagMusic=0;
+ 430   2          }
+ 431   1          else if((Key==KEY_GREEN2_MH)||(Key==KEY_GREEN2))
+ 432   1          {
+ 433   2             RGB_DataRam.Effect = 0;
+ 434   2             RGB_SetColor(RGB_GREEN2, Bright);
+ 435   2                              if (_FlagMusic) _FlagMusic=0;
+ 436   2          }
+ 437   1          else if((Key==KEY_BLUE2_MH)||(Key==KEY_BLUE2))
+ 438   1          {
+ 439   2             RGB_DataRam.Effect = 0;
+ 440   2             RGB_SetColor(RGB_BLUE2, Bright);
+ 441   2                              if (_FlagMusic) _FlagMusic=0;
+ 442   2          }
+ 443   1          else if((Key==KEY_ORANGE2_MH)||(Key==KEY_ORANGE2))
+ 444   1          {
+ 445   2             RGB_DataRam.Effect = 0;
+ 446   2             RGB_SetColor(RGB_ORANGE2, Bright);
+ 447   2                              if (_FlagMusic) _FlagMusic=0;
+ 448   2          }
+ 449   1          else if((Key==KEY_ORANGE3_MH)||(Key==KEY_ORANGE3))
+ 450   1          {
+ 451   2             RGB_DataRam.Effect = 0;
+ 452   2             RGB_SetColor(RGB_ORANGE3, Bright);
+ 453   2                              if (_FlagMusic) _FlagMusic=0;
+ 454   2          }
+ 455   1          else if((Key==KEY_PURPLE2_MH)||(Key==KEY_PURPLE2))
+ 456   1          {
+ 457   2             RGB_DataRam.Effect = 0;
+ 458   2             RGB_SetColor(RGB_PURPLE2, Bright);
+ 459   2                              if (_FlagMusic) _FlagMusic=0;
+ 460   2          }
+ 461   1          else if((Key==KEY_PURPLE3_MH)||(Key==KEY_PURPLE3))
+ 462   1          {
+ 463   2             RGB_DataRam.Effect = 0;
+ 464   2             RGB_SetColor(RGB_PURPLE3, Bright);
+ 465   2                              if (_FlagMusic) _FlagMusic=0;
+ 466   2          }
+ 467   1          else if((Key==KEY_BLUE3_MH)||(Key==KEY_BLUE3))
+ 468   1          {
+ 469   2             RGB_DataRam.Effect = 0;
+ 470   2             RGB_SetColor(RGB_BLUE3, Bright);
+ 471   2                              if (_FlagMusic) _FlagMusic=0;
+ 472   2          }
+ 473   1          else if((Key==KEY_BLUE4_MH)||(Key==KEY_BLUE4))
+ 474   1          {
+ 475   2             RGB_DataRam.Effect = 0;
+ 476   2             RGB_SetColor(RGB_BLUE4, Bright);
+ 477   2                              if (_FlagMusic) _FlagMusic=0;
+ 478   2          }
+ 479   1          /*else if(Key==KEY_AUTO_MH)
+ 480   1          {
+ 481   1              RGB_DataRam.AutoEffect = 5; //auto 5 Random
+ 482   1              j = m = 0;
+ 483   1              i = (rand()%7)+1;
+ 484   1              while(i == RGB_DataRam.Effect)
+C51 COMPILER V9.01   EFFECT                                                                12/13/2025 09:59:39 PAGE 9   
+
+ 485   1              { //Chon gia tri Random khac gia tri cu
+ 486   1                  i = (rand()%7)+1;
+ 487   1              }
+ 488   1              RGB_DataRam.Effect = i;
+ 489   1              i=0;
+ 490   1              RGB_DataRom.LastEffect = RGB_DataRam.LastEffect = 2;
+ 491   1              RGB_DataRom.AutoEffect = RGB_DataRam.AutoEffect;
+ 492   1              RGB_DataRom.Effect = RGB_DataRam.Effect;
+ 493   1              RGB_SetColor(RGB_BLACK, Bright);
+ 494   1          }*/
+ 495   1          else if((Key==KEY_FLASH_MH)||(Key==KEY_FLASH))
+ 496   1          {
+ 497   2              if(RGB_DataRam.LastEffect == 2)
+ 498   2              {
+ 499   3                   RGB_DataRam.Effect = RGB_DataRam.SaveEffect;
+ 500   3              }
+ 501   2              else
+ 502   2              {
+ 503   3                  if(++RGB_DataRam.Effect > 7)RGB_DataRam.Effect = 1;
+ 504   3                  RGB_DataRam.SaveEffect = RGB_DataRam.Effect;
+ 505   3              }
+ 506   2                                              RGB_DataRam.LastEffect = 1;
+ 507   2                                              RGB_DataRam.AutoEffect = 0;
+ 508   2                                              i = j = m = 0;
+ 509   2                                              RGB_SetColor(RGB_BLACK, Bright);
+ 510   2                                              SAVEDATA();
+ 511   2          }
+ 512   1          else if((Key==KEY_STROBE_MH)||(Key==KEY_STROBE))
+ 513   1          {
+ 514   2              SetProcessAutoEffect(1);  //auto 1
+ 515   2          }
+ 516   1       /*   else if((Key==KEY_JUMP7)||(Key==KEY_JUMP7_MH))
+ 517   1          {
+ 518   1              SetProcessAutoEffect(2);  //auto 2
+ 519   1          }
+ 520   1          else if((Key==KEY_FADE3)||(Key==KEY_FADE3_MH))
+ 521   1          {
+ 522   1              SetProcessAutoEffect(3);  //auto 3
+ 523   1          }
+ 524   1          else if((Key==KEY_FADE7)||(Key==KEY_FADE7_MH))
+ 525   1          {
+ 526   1              SetProcessAutoEffect(4);  //auto 4
+ 527   1          }*/
+ 528   1          
+ 529   1        else if((Key==KEY_UP_MH)||(Key==KEY_UP))  //UP Bright)
+ 530   1          {
+ 531   2                      if (RGB_DataRam.Effect == 0)
+ 532   2                              {
+ 533   3              if(RGB_DataRam.Brightness < MAX_BRIGHTNESS)
+ 534   3              {
+ 535   4                   RGB_DataRam.Brightness++;
+ 536   4                   if(!RGB_DataRam.Effect)
+ 537   4                      RGB_SetBright(RGB_DataRam.Brightness);
+ 538   4              }
+ 539   3                              }
+ 540   2                              else
+ 541   2                              {
+ 542   3                                       if(RGB_DataRam.Speed < MAX_SPEED)
+ 543   3              {
+ 544   4                   RGB_DataRam.Speed++;
+ 545   4                   RGB_SetSpeed(RGB_DataRam.Speed);
+ 546   4              }
+C51 COMPILER V9.01   EFFECT                                                                12/13/2025 09:59:39 PAGE 10  
+
+ 547   3                              }
+ 548   2                              SAVEDATA();
+ 549   2                                      
+ 550   2          }
+ 551   1          else if((Key==KEY_DOWN_MH)||(Key==KEY_DOWN))  //DOWN Bright
+ 552   1          {
+ 553   2                              if (RGB_DataRam.Effect == 0)
+ 554   2                              {
+ 555   3              if(RGB_DataRam.Brightness > MIN_BRIGHTNESS)
+ 556   3              {
+ 557   4                   RGB_DataRam.Brightness--;
+ 558   4                   if(!RGB_DataRam.Effect)
+ 559   4                      RGB_SetBright(RGB_DataRam.Brightness);
+ 560   4              }
+ 561   3                              }
+ 562   2                              else
+ 563   2                              {
+ 564   3                                      if(RGB_DataRam.Speed > MIN_SPEED)
+ 565   3              {
+ 566   4                   RGB_DataRam.Speed--;
+ 567   4                   RGB_SetSpeed(RGB_DataRam.Speed);
+ 568   4              }
+ 569   3                              }
+ 570   2                              SAVEDATA();
+ 571   2                                      
+ 572   2          }
+ 573   1          else if((Key == KEY_SPEED_U)||(Key == KEY_SPEED_U_MH))
+ 574   1          {
+ 575   2                                      if (RGB_DataRam.Effect!=0)
+ 576   2                                              {
+ 577   3                                               RGB_DataRam.Effect = 0;
+ 578   3                                               RGB_SetColor(RGB_RED, Bright);
+ 579   3                                               if (_FlagMusic) _FlagMusic=0;
+ 580   3                                               if (_FlagFade==0)_FlagFade=1;
+ 581   3                                               if(_FlagFade == 1) 
+ 582   3                                                       RGB_DataRam.AutoEffect=8;
+ 583   3                                               else
+ 584   3                                                       RGB_DataRam.AutoEffect=0;
+ 585   3                                              }
+ 586   2                                              else
+ 587   2                                              {
+ 588   3                                               if (++_FlagFade>=2)
+ 589   3                                                       _FlagFade=0;
+ 590   3                                               if(_FlagFade == 1) 
+ 591   3                                                       RGB_DataRam.AutoEffect=8;
+ 592   3                                               else
+ 593   3                                                       RGB_DataRam.AutoEffect=0;
+ 594   3                                               if (_FlagFade==0)
+ 595   3                                                      RGB_SetBright(RGB_DataRam.Brightness);
+ 596   3                                              }
+ 597   2            SAVEDATA();
+ 598   2          }
+ 599   1          else if((Key == KEY_SPEED_D)||(Key == KEY_SPEED_D_MH))
+ 600   1          {
+ 601   2                              if (++Flag_Music>=2)
+ 602   2                                              Flag_Music=0;
+ 603   2                                      if (Flag_Music==0)
+ 604   2                      RGB_DataRam.AutoEffect = 7;
+ 605   2                                      if (Flag_Music==1) 
+ 606   2                                      {
+ 607   3                                              if (_FlagMusic)
+ 608   3                                              _FlagMusic=0;
+C51 COMPILER V9.01   EFFECT                                                                12/13/2025 09:59:39 PAGE 11  
+
+ 609   3                                              RGB_DataRam.AutoEffect = 6;
+ 610   3                                      }
+ 611   2                                      RGB_DataRam.LastEffect = 2;
+ 612   2              RGB_DataRam.Effect = 10;
+ 613   2              i = j = m = 0;
+ 614   2              RGB_SetColor(RGB_BLACK, RGB_DataRam.Brightness);
+ 615   2                                      SAVEDATA();
+ 616   2          }
+ 617   1      }
+ 618          void Program_AutoEffect(uint8_t Auto_Effect)
+ 619          {
+ 620   1          if(Auto_Effect < 5 && Auto_Effect > 0)
+ 621   1          {
+ 622   2              if(Run_Effect_Done == 1)
+ 623   2              {
+ 624   3                  Run_Effect_Done = 0; //Clear Flag
+ 625   3                  RGB_DataRam.Effect = Prog_Auto[Auto_Effect-1][m]; //Chuyen chuong trinh
+ 626   3                  //RGB_DataRom.Effect = RGB_DataRam.Effect;
+ 627   3                  if(++m > 6)m=0;
+ 628   3              }
+ 629   2          }
+ 630   1          else if(Auto_Effect == 5)    //Auto Random
+ 631   1          {
+ 632   2              if(Run_Effect_Done == 1)
+ 633   2              {
+ 634   3                  Run_Effect_Done = 0; //Clear Flag
+ 635   3                  i = j = m = k = 0; //Reset all count
+ 636   3                  RGB_DataRam.Effect = rand()%7+1; 
+ 637   3                  //RGB_DataRom.Effect = RGB_DataRam.Effect;
+ 638   3              }
+ 639   2          }
+ 640   1      }
+ 641          void Program_Effect(uint8_t Prog_Effect, uint8_t Bright)
+ 642          {
+ 643   1              if(Prog_Effect==1) //Program Effect 1
+ 644   1              {  // Doi mau luan chuyen 3 mau
+ 645   2      //            RGB_SetModeSpeed(7);
+ 646   2                      RGB_SetModeSpeed(12);
+ 647   2                              if(++j>2)
+ 648   2                  {  //i = Lap hieu ung
+ 649   3                      j=0;
+ 650   3                      if(++i>7)
+ 651   3                                                                      { 
+ 652   4                                                                              i=0;
+ 653   4                                                                              Run_Effect_Done = 1; 
+ 654   4                                                                      } //Done Effect
+ 655   3                  }
+ 656   2                              if(j==0)
+ 657   2                  {
+ 658   3                                      RGB_SetColor(RGB_RED, Bright);
+ 659   3                  }
+ 660   2                              else if(j==1)
+ 661   2                  {
+ 662   3                                      RGB_SetColor(RGB_GREEN, Bright);
+ 663   3                  }
+ 664   2                              else if(j==2)
+ 665   2                  {
+ 666   3                                      RGB_SetColor(RGB_BLUE, Bright);
+ 667   3                  }
+ 668   2              }//end E1
+ 669   1              else if(Prog_Effect==2) //Program Effect 2
+ 670   1              {  // Toi dan luan chuyen 3 mau
+C51 COMPILER V9.01   EFFECT                                                                12/13/2025 09:59:39 PAGE 12  
+
+ 671   2                  //RGB_SetModeSpeed(0x02);
+ 672   2      //                      RGB_SetModeSpeed(0);
+ 673   2                      RGB_SetModeSpeed(1);
+ 674   2                              if(++j>MAX_STEP)
+ 675   2                              {
+ 676   3                                      j=0;
+ 677   3                                      if(++i>2){ i=0; if(++k>4){k=0; Run_Effect_Done = 1;} } //Done Effect
+ 678   3                      }
+ 679   2                              if(i==0)
+ 680   2                              {
+ 681   3                      SetColor(RED, MAX_STEP-j, Bright);
+ 682   3                              }
+ 683   2                              else if(i==1)
+ 684   2                              {
+ 685   3                      SetColor(GREEN, MAX_STEP-j, Bright);
+ 686   3                              }
+ 687   2                              else if(i==2)
+ 688   2                              {
+ 689   3                      SetColor(BLUE, MAX_STEP-j, Bright);
+ 690   3                              }
+ 691   2              }//end E2
+ 692   1              else if(Prog_Effect==3) //Program Effect 3
+ 693   1              {  // Doi mau luan chuyen 7 mau
+ 694   2                 // RGB_SetModeSpeed(0x09);
+ 695   2      //                      RGB_SetModeSpeed(7);
+ 696   2                      RGB_SetModeSpeed(12);
+ 697   2                              if(++i>6)
+ 698   2                  {
+ 699   3                      i=0;
+ 700   3                      if(++j>14)
+ 701   3                      {
+ 702   4                          j=0;
+ 703   4                          Run_Effect_Done = 1;  //Done Effect
+ 704   4                      }
+ 705   3                  }
+ 706   2                  RGB_SetColor(ColorTable[i], Bright);
+ 707   2              }//end E3
+ 708   1              else if(Prog_Effect==4) //Program Effect 4
+ 709   1              {  // Toi dan luan chuyen 7 mau
+ 710   2                  //RGB_SetModeSpeed(0x02);
+ 711   2      //                      RGB_SetModeSpeed(0);
+ 712   2                      RGB_SetModeSpeed(1);
+ 713   2                              if(++j>MAX_STEP)
+ 714   2                              {
+ 715   3                                      j=0;
+ 716   3                                      if(++i>6){ i=0; Run_Effect_Done = 1; } //Done Effect
+ 717   3                              }
+ 718   2                              if(i==0)
+ 719   2                              {
+ 720   3                      SetColor(GREEN, MAX_STEP-j, Bright);
+ 721   3                              }
+ 722   2                              else if(i==1)
+ 723   2                              {
+ 724   3                                                                      SetColor(RED, MAX_STEP-j, Bright);
+ 725   3                     
+ 726   3                              }
+ 727   2                              else if(i==2)
+ 728   2                              {
+ 729   3                      SetColor(BLUE, MAX_STEP-j, Bright);
+ 730   3                              }
+ 731   2                              else if(i==3)
+ 732   2                              {
+C51 COMPILER V9.01   EFFECT                                                                12/13/2025 09:59:39 PAGE 13  
+
+ 733   3                      SetColor(RED, MAX_STEP-j, Bright);
+ 734   3                      SetColor(GREEN, (MAX_STEP-j)/2, Bright);
+ 735   3                              }
+ 736   2                              else if(i==4)
+ 737   2                              {
+ 738   3                      SetColor(BLUE, MAX_STEP-j, Bright);
+ 739   3                      SetColor(GREEN, MAX_STEP-j, Bright);
+ 740   3                              }
+ 741   2                              else if(i==5)
+ 742   2                              {
+ 743   3                      SetColor(RED, MAX_STEP-j, Bright);
+ 744   3                      SetColor(BLUE, (MAX_STEP-j)/2, Bright);
+ 745   3                              }
+ 746   2                              else if(i==6)
+ 747   2                              {
+ 748   3                      SetColor(RED, MAX_STEP-j, Bright);
+ 749   3                      SetColor(GREEN, MAX_STEP-j, Bright);
+ 750   3                      SetColor(BLUE, MAX_STEP-j, Bright);
+ 751   3                              }
+ 752   2              } //end E4
+ 753   1              else if(Prog_Effect==5) //Program Effect 5
+ 754   1              {  // Sang Toi dan luan chuyen 7 mau
+ 755   2                  //RGB_SetModeSpeed(0x02);
+ 756   2      //                                      RGB_SetModeSpeed(0);
+ 757   2                      RGB_SetModeSpeed(1);
+ 758   2                              if(++j>MAX_STEP)
+ 759   2                              {
+ 760   3                                      j=0;
+ 761   3                                      if(++i>13){ i=0; Run_Effect_Done = 1; } //Done Effect
+ 762   3                              }
+ 763   2                              if(i==0)
+ 764   2                                      SetColor(BLUE, MAX_STEP-j, Bright);
+ 765   2                              else if(i==1)
+ 766   2                                      SetColor(RED, MAX_STEP-j, Bright);
+ 767   2                              else if(i==2)
+ 768   2                                      SetColor(GREEN, j, Bright);
+ 769   2                              else if(i==3)
+ 770   2                                      SetColor(GREEN, MAX_STEP-j, Bright);
+ 771   2                              else if(i==4)
+ 772   2                                      SetColor(BLUE, j, Bright);
+ 773   2                              else if(i==5)
+ 774   2                                      SetColor(RED, j, Bright);
+ 775   2                              else if(i==6)
+ 776   2                              {
+ 777   3                      SetColor(RED, j, Bright);
+ 778   3                      SetColor(GREEN, j/2, Bright);
+ 779   3                              }
+ 780   2                              else if(i==7)
+ 781   2                              {
+ 782   3                      SetColor(RED, MAX_STEP-j, Bright);
+ 783   3                      SetColor(GREEN, (MAX_STEP-j)/2, Bright);
+ 784   3                              }
+ 785   2                              else if(i==8)
+ 786   2                              {
+ 787   3                                  SetColor(BLUE, j, Bright);
+ 788   3                      SetColor(GREEN, j, Bright);
+ 789   3                              }
+ 790   2                              else if(i==9)
+ 791   2                              {
+ 792   3                      SetColor(BLUE, MAX_STEP-j, Bright);
+ 793   3                      SetColor(GREEN, MAX_STEP-j, Bright);
+ 794   3                              }
+C51 COMPILER V9.01   EFFECT                                                                12/13/2025 09:59:39 PAGE 14  
+
+ 795   2                              else if(i==10)
+ 796   2                              {
+ 797   3                      SetColor(BLUE, j/2, Bright);
+ 798   3                      SetColor(RED, j, Bright);
+ 799   3                              }
+ 800   2                              else if(i==11)
+ 801   2                              {
+ 802   3                      SetColor(BLUE, (MAX_STEP-j)/2, Bright);
+ 803   3                      SetColor(RED, MAX_STEP-j, Bright);
+ 804   3                              }
+ 805   2                              else if(i==12)
+ 806   2                              {
+ 807   3                                  SetColor(RED, j, Bright);
+ 808   3                      SetColor(GREEN, j, Bright);
+ 809   3                      SetColor(BLUE, j, Bright);
+ 810   3                              }
+ 811   2                              else if(i==13)
+ 812   2                              {
+ 813   3                                      SetColor(RED, MAX_STEP-j, Bright);
+ 814   3                      SetColor(GREEN, MAX_STEP-j, Bright);
+ 815   3                      SetColor(BLUE, MAX_STEP-j, Bright);
+ 816   3                              }
+ 817   2              }//end E5
+ 818   1              else if(Prog_Effect==6) //Program Effect 6
+ 819   1          {    //Loan 7 mau
+ 820   2              //RGB_SetModeSpeed(0x03);
+ 821   2                                      RGB_SetModeSpeed(12);
+ 822   2                      if(++j>MAX_STEP)
+ 823   2                      {
+ 824   3                              j=0;
+ 825   3                              if(++i>6){ i=0; Run_Effect_Done = 1; } //Done Effect
+ 826   3                      }
+ 827   2                      if(i==0)
+ 828   2                      {
+ 829   3                      
+ 830   3                  RedGreenBlue[RED].Duty =  MAX_STEP;
+ 831   3                  RedGreenBlue[GREEN].Duty = j;
+ 832   3                  RedGreenBlue[BLUE].Duty = 0;
+ 833   3                      }
+ 834   2                      else if(i==1)
+ 835   2                      {
+ 836   3                              RedGreenBlue[RED].Duty =  MAX_STEP-j;
+ 837   3                  RedGreenBlue[GREEN].Duty = MAX_STEP;
+ 838   3                  RedGreenBlue[BLUE].Duty = 0;
+ 839   3                      }
+ 840   2                      else if(i==2)
+ 841   2                      {
+ 842   3                              RedGreenBlue[RED].Duty =  0;
+ 843   3                  RedGreenBlue[GREEN].Duty = MAX_STEP;
+ 844   3                  RedGreenBlue[BLUE].Duty = j;
+ 845   3                      }
+ 846   2              else if(i==3)
+ 847   2                      {
+ 848   3                              RedGreenBlue[RED].Duty =  0;
+ 849   3                  RedGreenBlue[GREEN].Duty = MAX_STEP-j;
+ 850   3                  RedGreenBlue[BLUE].Duty = MAX_STEP;
+ 851   3                      }
+ 852   2                      else if(i==4)
+ 853   2                      {
+ 854   3                  RedGreenBlue[RED].Duty =  j;
+ 855   3                  RedGreenBlue[GREEN].Duty = 0;
+ 856   3                  RedGreenBlue[BLUE].Duty = MAX_STEP;
+C51 COMPILER V9.01   EFFECT                                                                12/13/2025 09:59:39 PAGE 15  
+
+ 857   3                      }
+ 858   2              else if(i==5)
+ 859   2                      {
+ 860   3                              RedGreenBlue[RED].Duty =  MAX_STEP;
+ 861   3                  RedGreenBlue[GREEN].Duty = 0;
+ 862   3                  RedGreenBlue[BLUE].Duty = MAX_STEP-j;
+ 863   3                      }
+ 864   2              }//end E6
+ 865   1          else if(Prog_Effect==7) //Program Effect 7
+ 866   1              {  // Bat tat 6 lan tung mau trong 7 mau
+ 867   2      //        RGB_SetModeSpeed(0x05);
+ 868   2                      RGB_SetModeSpeed(12);
+ 869   2              if(++k>1)
+ 870   2              {   //k = on/off
+ 871   3                  k=0;
+ 872   3                  if(++j>5)
+ 873   3                  {  //j = lan chop
+ 874   4                      j=0;
+ 875   4                      if(++i>6){ i=0; Run_Effect_Done = 1; } //i = sang so mau, Done Effect
+ 876   4                  }
+ 877   3              }
+ 878   2              if(k == 1)RGB_SetColor(ColorTable[i], Bright); //ON COLOR
+ 879   2              else RGB_SetColor(RGB_BLACK, Bright); //OFF COLOR
+ 880   2          }//end E7
+ 881   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   5037    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =     79      18
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =      1    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

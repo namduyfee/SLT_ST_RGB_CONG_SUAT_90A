@@ -1,0 +1,647 @@
+C51 COMPILER V9.01   USB_SERIAL                                                            08/22/2022 10:56:46 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE USB_SERIAL
+OBJECT MODULE PLACED IN USB_Serial.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Project\Source\USB_Serial.c LARGE OPTIMIZE(9,SIZE) BROWSE NOAREGS INCDIR(.\
+                    -Project\include) DEBUG OBJECTEXTEND PRINT(.\USB_Serial.lst) TABS(2) OBJECT(USB_Serial.obj)
+
+line level    source
+
+   1          #include "CH554.H"
+   2          #include "Debug.H"
+   3          #include <string.h>
+   4          #include "USB_Serial.h"
+   5          #define THIS_ENDP0_SIZE         DEFAULT_ENDP0_SIZE
+   6          #define BOOT_ADDR               0x3800
+   7          
+   8          UINT8X  Ep0Buffer[THIS_ENDP0_SIZE] _at_ 0x0000;
+   9          xdata USB_COMMAND CommandIn _at_ (sizeof(USB_COMMAND));
+  10          xdata USB_COMMAND DataIn _at_ (2*sizeof(USB_COMMAND));
+  11          xdata USB_COMMAND CommandAndDataOut _at_ (3*sizeof(USB_COMMAND));
+  12          
+  13          data UINT8  SetupReq,SetupLen;
+  14          //data UINT8  UsbConfig;
+  15          //data UINT8  SetReqtp
+  16          PUINT8C  pDescr;   
+  17          data USB_SETUP_REQ             SetupReqBuf;  
+  18          
+  19          void (* data bootloader)(void) = BOOT_ADDR;
+  20          void JumpToBootloader()
+  21          {
+  22   1        USB_INT_EN = 0;
+  23   1        USB_CTRL = 0x06;
+  24   1        EA = 0;
+  25   1        bootloader();
+  26   1        while(1)
+  27   1        {
+  28   2          CH554WDTFeed(0x00);
+  29   2        }
+  30   1      }
+  31          
+  32          UINT8C DevDesc[18] =
+  33          {
+  34              0x12,                       /*bLength */
+  35              0x01,                      /*bDescriptorType*/
+  36              0x00,                       /* bcdUSB */  
+  37              0x02,
+  38              0x00,                        /*bDeviceClass*/
+  39              0x00,                       /*bDeviceSubClass*/
+  40              0x00,                       /*bDeviceProtocol*/
+  41              0x08,                       /*bMaxPacketSize*/
+  42              LOBYTE(USBD_VID),           /*idVendor*/
+  43              HIBYTE(USBD_VID),           /*idVendor*/
+  44              LOBYTE(USBD_PID_FS),           /*idVendor*/
+  45              HIBYTE(USBD_PID_FS),           /*idVendor*/
+  46              0x00,                       /*bcdDevice rel. 2.00*/
+  47              0x02,
+  48              0x01,                       /*Index of manufacturer  string*/
+  49              0x02,                       /*Index of product string*/
+  50              0x03,                        /*Index of serial number string*/
+  51              0x01                        /*bNumConfigurations*/
+  52          };
+  53           UINT8C CfgDesc[USB_CDC_FS_CONFIG_DESC_SIZ]=
+  54          {
+C51 COMPILER V9.01   USB_SERIAL                                                            08/22/2022 10:56:46 PAGE 2   
+
+  55              /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  56          CONFIGURATION DESCRIPTOR - CONFIGURATION DESCRIPTOR - CONFIGURATION DESCRIPTOR
+  57          %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+  58          /******************************************************************************
+  59          bLength :  K thu?c c?a Descriptor.
+  60          ******************************************************************************/
+  61              0x09,                        // K thu?c c?a Configuration Descriptor l࠹ Byte
+  62          /******************************************************************************
+  63          bDescriptorType :  Lo?i Descriptor.
+  64          ******************************************************************************/
+  65              USB_DESC_TYPE_CONFIGURATION,  // Lo?i Descriptor l࠺ Configuration Descriptor
+  66          /******************************************************************************
+  67          wTotalLength :  T?ng s? byte c󠴲ong Descriptor vࡴ?t c? c⣠Descriptor kh⣍
+  68                          b뮠trong n󮍊***************************************************************************
+             -***/
+  69              USB_CDC_FS_CONFIG_DESC_SIZ,
+  70              0x00,
+  71          /******************************************************************************
+  72          bNumInterfaces :  S? interface c?a c?u h􊀮
+  73          ******************************************************************************/
+  74              0x01,     //5
+  75          /******************************************************************************
+  76          bConfigurationValue :  Ch? th? giᡴr? c?u h􊀮 L࠱ ho?c l?n hon.
+  77          ******************************************************************************/
+  78              0x01,
+  79          /******************************************************************************
+  80          iConfiguration :  Ch? s? c?a chu?i Descriptor mi뵠t? c?u h􊀮
+  81          ******************************************************************************/
+  82              0x00,
+  83          /******************************************************************************
+  84          bmAttributes   :  C᩠d?t c⣠giᡴr? T? c?p/Bus c?p ngu?n. Ho?c Remote Wakeup.
+  85                            Bit s? 7 lu𮠬࠱.
+  86                            Bit s? 6: 1 T? c?p ngu?n
+  87                                      0 Bus c?p ngu?n.
+  88                            Bit s? 5: 1 Cho ph갠suspended USB
+  89                                      0 Kh𮧠cho ph갠suspended.
+  90                            C⣠bit kh⣠lu𮠢?ng 0.
+  91          ******************************************************************************/
+  92              0xC0,
+  93          /******************************************************************************
+  94          bMaxPower   :  X⣠d?nh d򮧠di?n t?i da mࡴhi?t b? c?n c?p.
+  95                         Giᡴr? d򮧠di?n = bMaxPower*2 (mA).
+  96                         Giᡴr? max l࠵00mA.
+  97          ******************************************************************************/
+  98              0x32,
+  99          /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 100                 INTERFACE DESCRIPTOR - INTERFACE DESCRIPTOR - INTERFACE DESCRIPTOR
+ 101          %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+ 102          /******************************************************************************
+ 103          bLength :  K thu?c c?a Descriptor.
+ 104          ******************************************************************************/
+ 105              0x09, //10
+ 106          /******************************************************************************
+ 107          bDescriptorType :  Lo?i Descriptor.
+ 108          ******************************************************************************/
+ 109              USB_DESC_TYPE_INTERFACE,  //Lo?i Descriptor lࡉnterface
+ 110          /******************************************************************************
+ 111          bInterfaceNumber :  Ch? s? c?a interface. Giᡴr? nṠlࡣhuy뮠bi?t cho m?i
+ 112                              Interface. M?c d?nh l࠰.
+ 113          ******************************************************************************/
+ 114              0x00,
+ 115          /******************************************************************************
+C51 COMPILER V9.01   USB_SERIAL                                                            08/22/2022 10:56:46 PAGE 3   
+
+ 116          bAlternateSetting : Khi c?u h􊀠s? d?ng nhi?u interface, m?i interface s? c󠭿t
+ 117                              Descriptor tr񮧠v?i bInterfaceNumber vࡧiᡴr? chuy뮠bi?t
+ 118                              ? bAlternateSetting. Get_Interface s? l?y setting hi?n t?i,
+ 119                              Set_Interface s? c᩠d?t setting s? d?ng. M?c d?nh giᡴr? l࠰
+ 120          ******************************************************************************/
+ 121              0x00,
+ 122          /******************************************************************************
+ 123          bNumEndpoints :  S? lu?ng EndPoint s? d?ng trong interface ngo᩠EndPoint 0.
+ 124          ******************************************************************************/
+ 125              0x03,
+ 126          /******************************************************************************
+ 127          bInterfaceClass :  Gi?ng nhu bDeviceClass, nhung ch? cho nh?ng thi?t b? v?i
+ 128                             Class du?c x⣠d?nh b?i Interface.
+ 129                 0x01     :  Audio.
+ 130                 0x02     :  Communication Interface
+ 131                 0x03     :  Human Interface Device.
+ 132                 0x05     :  Physical.
+ 133                 0x06     :  Image
+ 134                 0x07     :  Printer
+ 135                 0x08     :  Mass Storage.
+ 136                 0x09     :  Hub.
+ 137                 0x0A     :  Data Interface.
+ 138                 0x0B     :  Smart Card.
+ 139                 0x0D     :  Content Security.
+ 140                 0x0E     :  Video.
+ 141                 0xDC     :  Diagnostic device.
+ 142                 0xE0     :  Wireless controller.
+ 143                 0xFE     :  Application Specific.
+ 144                             bInterfaceSubClass:   1  cho Device Firmware Update.
+ 145                             bInterfaceSubClass:   2  cho IrDA Bridge
+ 146                             bInterfaceSubClass:   3  cho Test vࡍeasurement.
+ 147          ******************************************************************************/
+ 148              0xFF, //15
+ 149          /******************************************************************************
+ 150          bInterfaceSubClass :  Cung gi?ng nhu bDeviceSubClass  nhung ch? cho nh?ng thi?t b? v?i
+ 151                                Class du?c x⣠d?nh b?i Interface
+ 152          ******************************************************************************/
+ 153              0xFF,   // Control Model
+ 154          /******************************************************************************
+ 155          bInterfaceProtocol :  Cung gi?ng nhu bDeviceProtocol  nhung ch? cho nh?ng thi?t b? v?i
+ 156                                Class du?c x⣠d?nh b?i Interface
+ 157          ******************************************************************************/
+ 158              0xFF,
+ 159          /******************************************************************************
+ 160          iInterface :          ch? s? t?i String mi뵠t? Interface. Giᡴr? l࠰ n?u kh𮧠c󍊠                   
+             -  chu?i Descriptor.
+ 161          ******************************************************************************/
+ 162              0x00,
+ 163              
+ 164          /******************************************************************************
+ 165          bLength :  K thu?c c?a EndPoint Descriptor.
+ 166          ******************************************************************************/
+ 167              0x07,
+ 168          /******************************************************************************
+ 169          bDescriptorType :  Lo?i Descriptor.
+ 170          ******************************************************************************/
+ 171              USB_DESC_TYPE_ENDPOINT, //20  // Lo?i Descriptor lࡅndPoint
+ 172          /******************************************************************************
+ 173          bEndpointAddress :  ??a ch? c?a EndPoint.
+ 174          ******************************************************************************/
+ 175              CDC_DATA_IN_EP,      // пa ch? EndPoint IN1
+ 176          /******************************************************************************
+C51 COMPILER V9.01   USB_SERIAL                                                            08/22/2022 10:56:46 PAGE 4   
+
+ 177          bmAttributes : Bit 1 v࠰ x⣠d?nh ki?u truy?n.
+ 178                         00:   Control
+ 179                         01:   Isochronous
+ 180                         10:   Bulk
+ 181                         11:   Interrupt.
+ 182                         //C⣠bit sau ch? ho?t d?ng ? ch? d? Isochronous
+ 183                         Bit 2 v࠳ x⣠d?nh ch? d? d?ng b?
+ 184                         00:   Kh𮧠d?ng b?
+ 185                         01:   B?t d?ng b?
+ 186                         10:   Th ?ng.
+ 187                         11:   ??ng b?.
+ 188                         Bit 4 v࠵ x⣠d?nh ki?u x? d?ng.
+ 189                         00:   EndPoint d? li?u
+ 190                         01:   Endpoint ph?n h?i
+ 191                         10:   Endpoint d? li?u, ph?n h?i ?n.
+ 192                         11:   Kh𮧠s? d?ng
+ 193                         Bit 6 v࠷ lu𮠢?ng 0.
+ 194          ******************************************************************************/
+ 195              0x02,      //Ki?u truy?n lࡢulk
+ 196          /******************************************************************************
+ 197          wMaxPacketSize :  K thu?c t?i da c?a m?t Endpoint trong m?t phi뮠truy?n.
+ 198          ******************************************************************************/
+ 199              CDC_DATA_FS_IN_PACKET_SIZE,
+ 200              0x00,
+ 201          /******************************************************************************
+ 202          bInterval :  X⣠d?nh kho?ng tr? c?a m?t phi뮠truy?n Endpoint. Chi ti?t xem
+ 203                       USB Spec.
+ 204          ******************************************************************************/
+ 205              0x00,    //25
+ 206              
+ 207          /******************************************************************************
+ 208          bLength :  K thu?c c?a EndPoint Descriptor.
+ 209          ******************************************************************************/
+ 210              0x07,
+ 211          /******************************************************************************
+ 212          bDescriptorType :  Lo?i Descriptor.
+ 213          ******************************************************************************/
+ 214              USB_DESC_TYPE_ENDPOINT,   // Lo?i Descriptor lࡅndPoint
+ 215          /******************************************************************************
+ 216          bEndpointAddress :  ??a ch? c?a EndPoint.
+ 217          ******************************************************************************/
+ 218              CDC_DATA_OUT_EP,      // ??a ch? EndPoint OUT1
+ 219          /******************************************************************************
+ 220          bmAttributes : Bit 1 v࠰ x⣠d?nh ki?u truy?n.
+ 221                         00:   Control
+ 222                         01:   Isochronous
+ 223                         10:   Bulk
+ 224                         11:   Interrupt.
+ 225                         //C⣠bit sau ch? ho?t d?ng ? ch? d? Isochronous
+ 226                         Bit 2 v࠳ x⣠d?nh ch? d? d?ng b?
+ 227                         00:   Kh𮧠d?ng b?
+ 228                         01:   B?t d?ng b?
+ 229                         10:   Th ?ng.
+ 230                         11:   ??ng b?.
+ 231                         Bit 4 v࠵ x⣠d?nh ki?u x? d?ng.
+ 232                         00:   EndPoint d? li?u
+ 233                         01:   Endpoint ph?n h?i
+ 234                         10:   Endpoint d? li?u, ph?n h?i ?n.
+ 235                         11:   Kh𮧠s? d?ng
+ 236                         Bit 6 v࠷ lu𮠢?ng 0.
+ 237          ******************************************************************************/
+ 238              0x02,      //Ki?u truy?n lࡢulk
+C51 COMPILER V9.01   USB_SERIAL                                                            08/22/2022 10:56:46 PAGE 5   
+
+ 239          /******************************************************************************
+ 240          wMaxPacketSize :  K thu?c t?i da c?a m?t Endpoint trong m?t phi뮠truy?n.
+ 241          ******************************************************************************/
+ 242              CDC_DATA_FS_OUT_PACKET_SIZE,   //30
+ 243              0x00,
+ 244          /******************************************************************************
+ 245          bInterval :  X⣠d?nh kho?ng tr? c?a m?t phi뮠truy?n Endpoint. Chi ti?t xem
+ 246                       USB Spec.
+ 247          ******************************************************************************/
+ 248              0x00,
+ 249          /******************************************************************************
+ 250          bLength :  K thu?c c?a EndPoint Descriptor.
+ 251          ******************************************************************************/
+ 252              0x07,     //40
+ 253          /******************************************************************************
+ 254          bDescriptorType :  Lo?i Descriptor.
+ 255          ******************************************************************************/
+ 256              USB_DESC_TYPE_ENDPOINT,
+ 257          /******************************************************************************
+ 258          bEndpointAddress :  ??a ch? c?a EndPoint.
+ 259          ******************************************************************************/
+ 260              CDC_CMD_OUT_EP,// пa ch? EndPoint OUT2
+ 261          /******************************************************************************
+ 262          bmAttributes : Bit 1 v࠰ x⣠d?nh ki?u truy?n.
+ 263                         00:   Control
+ 264                         01:   Isochronous
+ 265                         10:   Bulk
+ 266                         11:   Interrupt.
+ 267                         //C⣠bit sau ch? ho?t d?ng ? ch? d? Isochronous
+ 268                         Bit 2 v࠳ x⣠d?nh ch? d? d?ng b?
+ 269                         00:   Kh𮧠d?ng b?
+ 270                         01:   B?t d?ng b?
+ 271                         10:   Th ?ng.
+ 272                         11:   ??ng b?.
+ 273                         Bit 4 v࠵ x⣠d?nh ki?u x? d?ng.
+ 274                         00:   EndPoint d? li?u
+ 275                         01:   Endpoint ph?n h?i
+ 276                         10:   Endpoint d? li?u, ph?n h?i ?n.
+ 277                         11:   Kh𮧠s? d?ng
+ 278                         Bit 6 v࠷ lu𮠢?ng 0.
+ 279          ******************************************************************************/
+ 280              0x02,    //Truy?n ki?u Bulk
+ 281          /******************************************************************************
+ 282          wMaxPacketSize :  K thu?c t?i da c?a m?t Endpoint trong m?t phi뮠truy?n.
+ 283          ******************************************************************************/
+ 284              CDC_CMD_FS_OUT_PACKET_SIZE,             /* wMaxPacketSize: */
+ 285              0x00,       //45
+ 286          /******************************************************************************
+ 287          bInterval :  X⣠d?nh kho?ng tr? c?a m?t phi뮠truy?n Endpoint. Chi ti?t xem
+ 288                       USB Spec.
+ 289          ******************************************************************************/
+ 290              0x00,   //46// B? qua v?i ki?u Bulk transfer.
+ 291          };
+ 292          /**************************************************************************************************
+ 293           H?T VڎG THAY пI - H?T VڎG THAY пI - H?T VڎG THAY пI - H?T VڎG THAY пI - H?T VڎG THAY пI 
+ 294          **************************************************************************************************/
+ 295          data USB_FLAGS Flags = {0}; 
+ 296          /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 297          Function name :USBDeviceCfg()
+ 298          Description   :USB device mode configuration
+ 299          
+ 300          DataSheet     :PP40-46
+C51 COMPILER V9.01   USB_SERIAL                                                            08/22/2022 10:56:46 PAGE 6   
+
+ 301          %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+ 302          void USBDeviceCfg()
+ 303          {
+ 304   1          USB_CTRL = 0x00;
+ 305   1      //    USB_CTRL &= ~bUC_HOST_MODE; 
+ 306   1          USB_CTRL |= (bUC_DEV_PU_EN | bUC_INT_BUSY| bUC_DMA_EN);  //USB device and internal pull-up enable, autom
+             -atically return to NAK before interrupt flag is cleared during interrupt
+ 307   1          USB_DEV_AD = 0x00;
+ 308   1      
+ 309   1      ////  USB_CTRL |= bUC_LOW_SPEED;                //1.5Mbps
+ 310   1      ////  UDEV_CTRL |= bUD_LOW_SPEED;                                  
+ 311   1      
+ 312   1          USB_CTRL &= ~(bUC_LOW_SPEED|bUD_LOW_SPEED);               //12Mbps
+ 313   1      //    UDEV_CTRL &= ~bUD_LOW_SPEED;   
+ 314   1          UDEV_CTRL |= (bUD_PD_DIS|bUD_PORT_EN);                    //
+ 315   1      //    UDEV_CTRL |= bUD_PORT_EN;                 //Enable physical port
+ 316   1      }
+ 317          
+ 318          /*******************************************************************************
+ 319          * Function Name  : USBDeviceIntCfg()
+ 320          * Description    : USB device mode interrupt initialization
+ 321          * Input          : None
+ 322          * Output         : None
+ 323          * Return         : None
+ 324          *******************************************************************************/
+ 325          void USBDeviceIntCfg()
+ 326          {
+ 327   1          USB_INT_EN |= (bUIE_SUSPEND|bUIE_TRANSFER|bUIE_BUS_RST);              //Enable device hang interrupt  
+             -                                
+ 328   1       //   USB_INT_EN |= bUIE_TRANSFER;             //Enable USB transfer completion interrupt                 
+             -                 
+ 329   1      //    USB_INT_EN |= bUIE_BUS_RST;              //Enable device mode USB bus reset interrupt               
+             -                   
+ 330   1          USB_INT_FG |= 0x1F;                      //Clear interrupt flag                                  
+ 331   1          IE_USB = 1;                              //Enable USB interrupt                                  
+ 332   1                                                                             
+ 333   1      }
+ 334          
+ 335          
+ 336          /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 337          Function name :USBDeviceEndPointCfg()
+ 338          Description   :USB device mode endpoint configuration
+ 339          
+ 340          DataSheet     :PP40-46
+ 341          %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+ 342          void USBDeviceEndPointCfg()
+ 343          {
+ 344   1      
+ 345   1          UEP2_DMA = (PUINT8X)&DataIn;                                       //Endpoint 2 data transfer address 
+             -                                                                               
+ 346   1          UEP2_3_MOD |= (bUEP2_TX_EN|bUEP2_RX_EN);                                  //Endpoint 2 send enable    
+             -      
+ 347   1       //   UEP2_3_MOD |= bUEP2_RX_EN;                                  //Endpoint 2 Receive Enable        
+ 348   1          UEP2_3_MOD &= ~bUEP2_BUF_MOD;                               //Endpoint 2 single 64 byte send buffer, s
+             -ingle 64 byte receive buffer, a total of 128 bytes           
+ 349   1          UEP2_CTRL = bUEP_AUTO_TOG|UEP_T_RES_NAK | UEP_R_RES_ACK;  //Endpoint 2 automatically flips the sync fla
+             -g, IN transaction returns NAK, OUT returns ACK
+ 350   1          
+ 351   1          UEP1_DMA = (PUINT8X)&CommandIn;
+ 352   1          UEP4_1_MOD |= bUEP1_RX_EN;  
+ 353   1      //    UEP4_1_MOD &= ~bUEP1_BUF_MOD;
+ 354   1          UEP1_CTRL = bUEP_AUTO_TOG | UEP_T_RES_NAK | UEP_R_RES_ACK;
+C51 COMPILER V9.01   USB_SERIAL                                                            08/22/2022 10:56:46 PAGE 7   
+
+ 355   1        
+ 356   1          UEP0_DMA = Ep0Buffer;                                       //Endpoint 0 data transfer address
+ 357   1          UEP4_1_MOD &= ~(bUEP1_BUF_MOD|bUEP4_RX_EN | bUEP4_TX_EN);                 //Endpoint 0 single 64 byte send and r
+             -eceive buffer
+ 358   1          UEP0_CTRL = UEP_R_RES_ACK | UEP_T_RES_NAK;                  //OUT transaction returns ACK, IN transaction returns
+             - NAK
+ 359   1      }
+ 360          /*******************************************************************************
+ 361          * Function Name  : SendData( PUINT8 SendBuf )
+ 362          * Description    : Send data to the host serial port
+ 363          * Input          : PUINT8 SendBuf
+ 364          * Output         : None
+ 365          * Return         : None
+ 366          *******************************************************************************/
+ 367          void SendData()
+ 368          {
+ 369   1        UEP2_T_LEN = sizeof(USB_COMMAND);
+ 370   1        UEP2_CTRL &= ~(bUEP_T_RES1 | bUEP_T_RES0);
+ 371   1        UEP2_CTRL = UEP2_CTRL & ~ MASK_UEP_T_RES | UEP_T_RES_ACK; 
+ 372   1      }
+ 373          
+ 374          /*******************************************************************************
+ 375          * Function Name  : RecieveData()
+ 376          * Description    : USB device mode endpoint configuration
+ 377          * Input          : None
+ 378          * Output         : None
+ 379          * Return         : None
+ 380          *******************************************************************************/
+ 381          //void RecieveData()
+ 382          //{
+ 383          //  TR0 = ET0 = TR2 = ET2 = 0;
+ 384          //  Flags.ACCESS_BITS.USB_DATA = 1; 
+ 385          //}
+ 386          //void RecieveCommand()
+ 387          //{
+ 388          //  TR0 = ET0 = TR2 = ET2 = 0;
+ 389          //  Flags.ACCESS_BITS.USB_CMD = 1;  
+ 390          //}
+ 391          static UINT8C StringLangID[STRING_LANGID_SIZE] = 
+ 392          {
+ 393            STRING_LANGID_SIZE,
+ 394            USB_DESCR_TYP_STRING,
+ 395            0x09, 0x04
+ 396          };
+ 397          
+ 398          static UINT8C StringVecdor[STRING_VENDOR_SIZE] = 
+ 399          {
+ 400            STRING_VENDOR_SIZE,
+ 401            USB_DESCR_TYP_STRING,
+ 402            /* vendor */
+ 403            'S', 0,
+ 404            'T', 0,
+ 405            ' ', 0,
+ 406            'R', 0,
+ 407            'G', 0,
+ 408            'B', 0,
+ 409          };
+ 410          /*******************************************************************************
+ 411          * Function Name  : USBInterrupt()
+ 412          * Description    : USB interrupt handler
+ 413          *******************************************************************************/
+ 414          void  USBInterrupt( void ) interrupt INT_NO_USB using 1   //Không được đặt ngắt này trong using 
+C51 COMPILER V9.01   USB_SERIAL                                                            08/22/2022 10:56:46 PAGE 8   
+
+             -0
+ 415          {   
+ 416   1        data UINT8 len; 
+ 417   1        if(UIF_TRANSFER)
+ 418   1        {
+ 419   2          switch (USB_INT_ST & (MASK_UIS_TOKEN | MASK_UIS_ENDP))
+ 420   2          {
+ 421   3            case UIS_TOKEN_SETUP | 0:                                                 
+ 422   3                len = USB_RX_LEN;
+ 423   3                if(len == (sizeof(USB_SETUP_REQ)))
+ 424   3                {   
+ 425   4                   //SetReqtp = UsbSetupBuf->bRequestType;
+ 426   4                   SetupLen = UsbSetupBuf->wLengthL;
+ 427   4                   len = 0;                                                                                           
+             -                             
+ 428   4                   SetupReq = UsbSetupBuf->bRequest;
+ 429   4      //             if(SetReqtp == 0xc0)
+ 430   4      //             {
+ 431   4      //                len = 2;
+ 432   4      //             }
+ 433   4      //             else if(SetReqtp == 0x40)
+ 434   4      //             {
+ 435   4      //                len = 9;                                                        
+ 436   4      //             }
+ 437   4                   //else
+ 438   4                   { 
+ 439   5                      switch(SetupReq)                                                
+ 440   5                      {
+ 441   6                         case USB_GET_DESCRIPTOR:
+ 442   6                              switch(UsbSetupBuf->wValueH)
+ 443   6                              {
+ 444   7                                 case USB_DESCR_TYP_DEVICE:                                             
+ 445   7                                     pDescr = DevDesc;                                
+ 446   7                                     len = sizeof(DevDesc);                      
+ 447   7                                 break;  
+ 448   7                                 case USB_DESCR_TYP_CONFIG:                                             
+ 449   7                                     pDescr = CfgDesc;                                
+ 450   7                                     len = sizeof(CfgDesc);
+ 451   7                                 break; 
+ 452   7                                 case USB_DESCR_TYP_STRING: 
+ 453   7                                   if(UsbSetupBuf->wValueL ==0)
+ 454   7                                     {
+ 455   8                                        pDescr = StringLangID;
+ 456   8                                        len = sizeof(StringLangID);
+ 457   8                                      }
+ 458   7                                      else
+ 459   7                                      {
+ 460   8                                        pDescr = StringVecdor;
+ 461   8                                        len = sizeof(StringVecdor);
+ 462   8                                      }
+ 463   7                                 break; 
+ 464   7                                 default:
+ 465   7                                     //len = 0xff;                                      
+ 466   7                                 break;
+ 467   7                               }
+ 468   6                               if ( SetupLen > len ) SetupLen = len;                  
+ 469   6                               len = SetupLen >= 8 ? 8 : SetupLen;                    
+ 470   6                               memcpy(Ep0Buffer,pDescr,len);                          
+ 471   6                               SetupLen -= len;
+ 472   6                               pDescr += len;
+ 473   6                               break;            
+ 474   6                          case USB_SET_ADDRESS:
+C51 COMPILER V9.01   USB_SERIAL                                                            08/22/2022 10:56:46 PAGE 9   
+
+ 475   6                               SetupLen = UsbSetupBuf->wValueL;                       
+ 476   6                               break;
+ 477   6      //                    case USB_GET_CONFIGURATION:
+ 478   6      //                         Ep0Buffer[0] = UsbConfig;
+ 479   6      //                         if ( SetupLen >= 1 ) len = 1;
+ 480   6      //                         break;
+ 481   6      //                    case USB_SET_CONFIGURATION:
+ 482   6      //                         UsbConfig = UsbSetupBuf->wValueL;
+ 483   6      //                         break;
+ 484   6                          default:
+ 485   6                               //len = 0xff;                                            
+ 486   6                               break;    
+ 487   6                         }
+ 488   5                      }
+ 489   4                  }
+ 490   3      //            else
+ 491   3      //            {
+ 492   3      //                len = 0xff;                                                     
+ 493   3      //            }
+ 494   3      
+ 495   3      //            if(len == 0xff)
+ 496   3      //            {
+ 497   3      //                SetupReq = 0xFF;
+ 498   3      //                UEP0_CTRL = bUEP_R_TOG | bUEP_T_TOG | UEP_R_RES_STALL | UEP_T_RES_STALL;//STALL            
+ 499   3      //            }
+ 500   3      //            else 
+ 501   3                    //if(len <= 8)                                                   
+ 502   3                  {
+ 503   4                      UEP0_T_LEN = len;
+ 504   4                      UEP0_CTRL = bUEP_R_TOG | bUEP_T_TOG | UEP_R_RES_ACK | UEP_T_RES_ACK;  
+ 505   4                  }
+ 506   3      //            else
+ 507   3      //            {
+ 508   3      //                UEP0_T_LEN = 0;                                                       
+ 509   3      //                UEP0_CTRL = bUEP_R_TOG | bUEP_T_TOG | UEP_R_RES_ACK | UEP_T_RES_ACK;               
+ 510   3      //            }
+ 511   3                  break;
+ 512   3             case UIS_TOKEN_IN | 0:                                                         //endpoint0 IN
+ 513   3                  switch(SetupReq)
+ 514   3                  {
+ 515   4                     case USB_GET_DESCRIPTOR:
+ 516   4                          len = SetupLen >= 8 ? 8 : SetupLen;                               
+ 517   4                          memcpy( Ep0Buffer, pDescr, len );                                 
+ 518   4                          SetupLen -= len;
+ 519   4                          pDescr += len;
+ 520   4                          UEP0_T_LEN = len;
+ 521   4                          UEP0_CTRL ^= bUEP_T_TOG;                                          
+ 522   4                          break;
+ 523   4                     case USB_SET_ADDRESS:
+ 524   4                          USB_DEV_AD = USB_DEV_AD & bUDA_GP_BIT | SetupLen;
+ 525   4                          UEP0_CTRL = UEP_R_RES_ACK | UEP_T_RES_NAK;
+ 526   4                          break;
+ 527   4                     default:
+ 528   4                          UEP0_T_LEN = 0;                                                
+ 529   4                          UEP0_CTRL = UEP_R_RES_ACK | UEP_T_RES_NAK;
+ 530   4                          break;
+ 531   4                  }
+ 532   3                  break;
+ 533   3      //       case UIS_TOKEN_OUT | 0:                                                 // endpoint0 OUT
+ 534   3      //            len = USB_RX_LEN;
+ 535   3      //            UEP0_T_LEN = 0;                                                    
+ 536   3      //            UEP0_CTRL = UEP_R_RES_ACK | UEP_T_RES_ACK;                                          
+C51 COMPILER V9.01   USB_SERIAL                                                            08/22/2022 10:56:46 PAGE 10  
+
+ 537   3      //            break;
+ 538   3             case UIS_TOKEN_OUT | 1:    //DATA FROM PC 
+ 539   3                //RecieveCommand();
+ 540   3                TR0 = TR2 = 0;
+ 541   3                Flags.ACCESS_BITS.USB_CMD = 1;
+ 542   3                UEP1_CTRL = UEP1_CTRL & ~ MASK_UEP_R_RES | UEP_R_RES_ACK; 
+ 543   3                break;
+ 544   3      //      case UIS_TOKEN_IN | 1:                                                 
+ 545   3      //          UEP1_T_LEN = 0;                                                                                  
+ 546   3      //          UEP1_CTRL = UEP1_CTRL & ~ MASK_UEP_T_RES | UEP_T_RES_NAK;            
+ 547   3      //          break;
+ 548   3             case UIS_TOKEN_OUT | 2:     
+ 549   3                //RecieveData();    
+ 550   3                TR0 = TR2 = 0;
+ 551   3                Flags.ACCESS_BITS.USB_DATA = 1;
+ 552   3                UEP2_CTRL = UEP2_CTRL & ~ MASK_UEP_R_RES | UEP_R_RES_ACK;//UEP_R_RES_ACK;                    
+ 553   3                break;
+ 554   3             case UIS_TOKEN_IN | 2:                                                 
+ 555   3                UEP2_T_LEN = 0;                                                    //
+ 556   3                UEP2_CTRL = UEP2_CTRL & ~ MASK_UEP_T_RES | UEP_T_RES_NAK;        
+ 557   3                break;
+ 558   3              default:
+ 559   3                  break;
+ 560   3            }
+ 561   2            UIF_TRANSFER = 0;                                         
+ 562   2        }
+ 563   1        if(UIF_BUS_RST)                                             
+ 564   1        {
+ 565   2          USB_DEV_AD = 0x00;
+ 566   2          UIF_SUSPEND = 0;
+ 567   2          UIF_TRANSFER = 0;
+ 568   2          UIF_BUS_RST = 0;                                     
+ 569   2        }
+ 570   1        if (UIF_SUSPEND) 
+ 571   1        {                                                      
+ 572   2          UIF_SUSPEND = 0;
+ 573   2      //    if ( USB_MIS_ST & bUMS_SUSPEND ) 
+ 574   2      //    {                                                                          
+ 575   2      //      while ( XBUS_AUX & bUART0_TX );                                          
+ 576   2      //      SAFE_MOD = 0x55;
+ 577   2      //      SAFE_MOD = 0xAA;
+ 578   2      //      WAKE_CTRL = bWAK_BY_USB | bWAK_RXD0_LO;                                  
+ 579   2      //      PCON |= PD;                                                              
+ 580   2      //      SAFE_MOD = 0x55;
+ 581   2      //      SAFE_MOD = 0xAA;
+ 582   2      //      WAKE_CTRL = 0x00;
+ 583   2      //    }
+ 584   2        } 
+ 585   1        else 
+ 586   1        {                                                                            
+ 587   2          USB_INT_FG = 0x00;                                                         
+ 588   2        }      
+ 589   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    479    ----
+   CONSTANT SIZE    =     75    ----
+   XDATA SIZE       =      2    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     14       1
+   IDATA SIZE       =   ----    ----
+C51 COMPILER V9.01   USB_SERIAL                                                            08/22/2022 10:56:46 PAGE 11  
+
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

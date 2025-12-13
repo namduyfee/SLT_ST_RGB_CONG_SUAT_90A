@@ -1,0 +1,10 @@
+"Debug.obj",
+"Main.obj",
+"Timer0.obj",
+"Effect.obj",
+"Savedata.obj",
+"WriteFlashROM.obj",
+"ADC.obj",
+"Effect_RGBDance.obj" 
+TO "ch554_txm" 
+RAMSIZE(256) 

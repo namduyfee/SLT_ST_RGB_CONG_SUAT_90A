@@ -1,0 +1,193 @@
+C51 COMPILER V9.01   EFFECT_RGBDANCE                                                       12/13/2025 09:59:39 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE EFFECT_RGBDANCE
+OBJECT MODULE PLACED IN Effect_RGBDance.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Project\Source\Effect_RGBDance.c LARGE ROM(COMPACT) OPTIMIZE(SIZE) BROWSE N
+                    -OAREGS INCDIR(.\Project\include) DEBUG OBJECTEXTEND PRINT(.\Effect_RGBDance.lst) OBJECT(Effect_RGBDance.obj)
+
+line level    source
+
+   1          #include "Effect_RGBDance.h"
+   2          #include "Effect.h"
+   3          #include "Debug.H"
+   4          extern RGB_DATA RGB_DataRam;
+   5          uint8_t xdata Step_Color=0,_FlagMusic=0,_Flag_color=0,_FlagFade=0,Step_Duty=0;
+   6          uint16_t Time_Wait=0,Time_Color=0,_Flagcount=10000;
+   7          
+   8          uint8_t EFFECT_MoveColor (uint8_t Duty,uint8_t Bright) 
+   9          {
+  10   1                      if (++Time_Wait>=5000)
+  11   1                      {
+  12   2                              Time_Wait=0;
+  13   2                              if (Bright<(170/value))
+  14   2                                      Step_Duty=0;
+  15   2                      }
+  16   1               if (Bright>(200/value))
+  17   1               {
+  18   2                       if (++Step_Duty>=10)
+  19   2                       {
+  20   3                               Step_Duty=0;
+  21   3                               Time_Color=0;
+  22   3                               if (++Step_Color>=7)
+  23   3                               {
+  24   4                                       Step_Color=0;
+  25   4                               }
+  26   3                       }
+  27   2               }
+  28   1               else
+  29   1               {
+  30   2                       if (++Time_Color>=1000)
+  31   2                       {
+  32   3                               Time_Color=0;
+  33   3                               if (++Step_Color>=7)
+  34   3                               {
+  35   4                                       Step_Color=0;
+  36   4                               }
+  37   3                       }
+  38   2                       mDelaymS(1);
+  39   2               }
+  40   1               Duty=Bright;
+  41   1               //if (Duty>100) Duty=100;
+  42   1               //if (Bright>10)
+  43   1               switch (Step_Color)
+  44   1               {
+  45   2                       case 0:
+  46   2                       {
+  47   3                              SetColor(RED,Duty,Bright);
+  48   3                              SetColor(BLUE,0,Bright);
+  49   3                              SetColor(GREEN,0,Bright);
+  50   3                       }break;
+  51   2                       case 1:
+  52   2                       {
+  53   3                              SetColor(RED,0,Bright);
+  54   3                              SetColor(BLUE,0,Bright);
+C51 COMPILER V9.01   EFFECT_RGBDANCE                                                       12/13/2025 09:59:39 PAGE 2   
+
+  55   3                              SetColor(GREEN,Duty,Bright);
+  56   3                       }break;
+  57   2                       case 2:
+  58   2                       {
+  59   3                              SetColor(RED,0,Bright);
+  60   3                              SetColor(BLUE,Duty,Bright);
+  61   3                              SetColor(GREEN,0,Bright);
+  62   3                       }break;
+  63   2                       case 3:
+  64   2                       {
+  65   3                              SetColor(RED,Duty,Bright);
+  66   3                              SetColor(BLUE,Duty,Bright);
+  67   3                              SetColor(GREEN,0,Bright);
+  68   3                       }break;
+  69   2                       case 4:
+  70   2                       {
+  71   3                              SetColor(RED,Duty,Bright);
+  72   3                              SetColor(BLUE,0,Bright);
+  73   3                              SetColor(GREEN,Duty,Bright);
+  74   3                       }break;
+  75   2                       case 5:
+  76   2                       {
+  77   3                              SetColor(RED,0,Bright);
+  78   3                              SetColor(BLUE,Duty,Bright);
+  79   3                              SetColor(GREEN,Duty,Bright);
+  80   3                       }break;
+  81   2                       case 6:
+  82   2                       {
+  83   3                              SetColor(RED,Duty,Bright);
+  84   3                              SetColor(BLUE,Duty,Bright);
+  85   3                              SetColor(GREEN,Duty,Bright);
+  86   3                       }break;
+  87   2               }
+  88   1               /*else
+  89   1               {
+  90   1                      SetColor(RED,0,0);
+  91   1                              SetColor(BLUE,0,0);
+  92   1                              SetColor(GREEN,0,0);
+  93   1               }*/
+  94   1               return 0;
+  95   1      }
+  96          
+  97          uint8_t EFFECT_MoveColor2 (uint8_t Duty,uint8_t _dBand) 
+  98          {
+  99   1              if (!_FlagMusic)
+ 100   1                      _FlagMusic=1;
+ 101   1              if (_dBand>=60)
+ 102   1              {
+ 103   2              _Flagcount=10;//(230-_dBand);
+ 104   2              }
+ 105   1              
+ 106   1              if (_dBand<=50) 
+ 107   1              {
+ 108   2                      _Flagcount+=50;
+ 109   2              if (_Flagcount>=1000);
+ 110   2            _Flagcount=1000;
+ 111   2              }
+ 112   1      
+ 113   1              if (++Time_Color>=_Flagcount)
+ 114   1              {
+ 115   2                      Time_Color=0;
+ 116   2                      if (++Step_Duty>=MAX_STEP)
+C51 COMPILER V9.01   EFFECT_RGBDANCE                                                       12/13/2025 09:59:39 PAGE 3   
+
+ 117   2                      {
+ 118   3                              Step_Duty=0;
+ 119   3                              if (++Step_Color>=6)
+ 120   3              Step_Color=0;
+ 121   3                      }
+ 122   2              }
+ 123   1              switch (Step_Color)
+ 124   1              {
+ 125   2              case 0:
+ 126   2              {
+ 127   3                      SetColor(RED,Step_Duty,100);
+ 128   3                      SetColor(BLUE,MAX_STEP-Step_Duty,100);
+ 129   3                      SetColor(GREEN,0,100);
+ 130   3              }break;
+ 131   2              case 1:
+ 132   2              {
+ 133   3                      SetColor(RED,MAX_STEP-Step_Duty,100);
+ 134   3                      SetColor(BLUE,0,100);
+ 135   3                      SetColor(GREEN,Step_Duty,100);
+ 136   3              }break;
+ 137   2              case 2:
+ 138   2              {
+ 139   3                      SetColor(RED,0,100);
+ 140   3                      SetColor(BLUE,Step_Duty,100);
+ 141   3                      SetColor(GREEN,MAX_STEP-Step_Duty,100);
+ 142   3              }break;
+ 143   2              case 3:
+ 144   2              {
+ 145   3                      SetColor(RED,Step_Duty,100);
+ 146   3                      SetColor(BLUE,MAX_STEP-Step_Duty,100);
+ 147   3                      SetColor(GREEN,Step_Duty,100);
+ 148   3              }break;
+ 149   2              case 4:
+ 150   2              {
+ 151   3                      SetColor(RED,MAX_STEP-Step_Duty,100);
+ 152   3                      SetColor(BLUE,0,100);
+ 153   3                      SetColor(GREEN,MAX_STEP,100);
+ 154   3              }break;
+ 155   2              case 5:
+ 156   2              {
+ 157   3                      SetColor(RED,0,100);
+ 158   3                      SetColor(BLUE,Step_Duty,100);
+ 159   3                      SetColor(GREEN,MAX_STEP-Step_Duty,100);
+ 160   3              }break;
+ 161   2              }
+ 162   1       return 0;
+ 163   1      }
+*** WARNING C280 IN LINE 97 OF PROJECT\SOURCE\EFFECT_RGBDANCE.C: 'Duty': unreferenced local variable
+ 164          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    690    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =     11       3
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)

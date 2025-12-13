@@ -1,0 +1,278 @@
+C51 COMPILER V9.01   MAIN                                                                  12/13/2025 11:34:19 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN Main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Main.C LARGE ROM(COMPACT) OPTIMIZE(SIZE) BROWSE NOAREGS INCDIR(.\Project\in
+                    -clude) DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          
+   2          /********************************** (C) COPYRIGHT *******************************
+   3          * File Name          : Main.C
+   4          * Author             : WCH
+   5          * Version            : V1.0
+   6          * Date               : 2017/01/20
+   7          * Description        : CH554 ´¥Ãþ°´¼üÖÐ¶ÏºÍ²éÑ¯·½Ê½½øÐÐ²É¼¯²¢±¨¸æµ±Ç°²ÉÑùÍ¨µÀ°´¼ü×´Ì¬£¬°üº¬³õÊ¼»¯ºÍ°´¼ü²ÉÑ
+             -ùµÈÑÝÊ¾º¯Êý
+   8          *******************************************************************************/
+   9          #include "CH554.H"
+  10          #include "Debug.H"
+  11          #include "TouchKey.H"
+  12          #include <stdio.h>
+  13          #include "Timer0.H"
+  14          #include "Effect.h"
+  15          #include "savedata.h"
+  16          #include "WriteFlashROM.h"
+  17          #include "ADC.H"
+  18          #include "Effect_RGBDance.h"
+  19          #include "USB_Serial.h"
+  20          #pragma  NOAREGS
+  21          /* GPIO config
+  22                          |       Pn_MOD_OC               |       Pn_DIR_PU               |               Chuc Nang
+  23                          |                       0                               |                       0                               |       dau vao tro khang cao, khong co dien tro keo len tai cac chan
+  24                          |                       0                               |                       1                               | Dau ra Push-Pull, Cung cap dong lon
+  25                          |                       1                               |                       0                               | Dau ra Open-Drain, khong co dien tro keo tai cac chan
+  26                          |                       1                               |                       1                               | Tuong thich voi 8051 chuan
+  27                          trong do n la so port
+  28          */
+  29          /* các truong version
+  30                  xx - phiên ban
+  31                  xx - ngày
+  32                  xx - tháng
+  33                  xx - nam
+  34          */ 
+  35          #define VERSION         0x10080721
+  36          /* in project */
+  37          
+  38          void handler_color_button(void); 
+  39          uint32_t color_disp;
+  40          uint32_t color_disp_old = 0;
+  41          uint32_t IR_Data_tem = 0;
+  42          uint8_t start_select_color = 0;
+  43          //
+  44          
+  45          uint32_t xdata i,j,Tongle_Led =0;
+  46          uint8_t idata Flag_IR_Convert, Flag_Speed_Effect, Display_Effect, Run_Effect_Done;
+  47          uint32_t xdata IR_Data = 0;
+  48          uint8_t xdata dB_Data;
+  49          RGB_DATA RGB_DataRam;
+  50          extern uint8_t xdata _FlagFade;
+  51          extern uint8_t idata But_Count;
+  52          bit BIT_TMP;
+  53          uint8_t xdata DataFlash[3] = {0x01,0x02,0x03};
+C51 COMPILER V9.01   MAIN                                                                  12/13/2025 11:34:19 PAGE 2   
+
+  54          extern uint8_t idata ADC_Value;
+  55          sbit    LED2=P1^5;
+  56          sbit    LED=P1^4;
+  57          sbit    LED_R = P1^7;
+  58          sbit    LED_G = P1^0;
+  59          sbit    LED_B = P3^1;
+  60          //UINT8  a;
+  61          main( )
+  62          {
+  63   1              CfgFsys(); 
+  64   1              mDelaymS(30);
+  65   1              P3_MOD_OC = 0x18;                       //0x19;
+  66   1              P1_MOD_OC       =       0;
+  67   1              P3_DIR_PU |= 0x3F;              //0x3F;
+  68   1              P1_DIR_PU =     0xFD;
+  69   1                      
+  70   1              CH554WDTModeSelect(1);
+  71   1              CH554WDTFeed(0x00);
+  72   1      
+  73   1      //      mInitSTDIO( );                                                             //??0???
+  74   1      //  UART1Setup();
+  75   1      //      printf("start ...\n");
+  76   1              RGB_PinInit();
+  77   1              LOADSAVEDATA(); // load gia tri luu trong APROM
+  78   1              mDelaymS(10);
+  79   1      
+  80   1               
+  81   1              Timer0_Init(8);                                                         //50us
+  82   1              
+  83   1              Timer1_Init(8);                                                                 // 4us
+  84   1              Timer2_InputCapture_Init();
+  85   1              ADC_Init();
+  86   1                      But_Count = 6 + RGB_DataRam.Effect;
+  87   1      
+  88   1      //    if(!RGB_DataRam.Brightness)
+  89   1      //        RGB_DataRam.Brightness = MAX_BRIGHTNESS;
+  90   1          //RGB_SetModeSpeed(RGB_DataRam.Mode);
+  91   1          if(!RGB_DataRam.Speed)
+  92   1              RGB_DataRam.Speed = 12;
+  93   1          RGB_SetSpeed(RGB_DataRam.Speed);
+  94   1           if((RGB_DataRam.Color.DutyRed == 0xFF) && (RGB_DataRam.Color.DutyGreen == 0xFF) && (RGB_DataRam.Color
+             -.DutyBlue==0xff))
+  95   1                       //if(!RGB_DataRam.Color.DutyRed && !RGB_DataRam.Color.DutyGreen && !RGB_DataRam.Color.DutyBlue) //Check
+  96   1              RGB_SetColor(RGB_WHITE, RGB_DataRam.Brightness);
+  97   1          SetColor(RED, RGB_DataRam.Color.DutyRed, RGB_DataRam.Brightness);
+  98   1          SetColor(GREEN, RGB_DataRam.Color.DutyGreen, RGB_DataRam.Brightness);
+  99   1          SetColor(BLUE, RGB_DataRam.Color.DutyBlue, RGB_DataRam.Brightness);
+ 100   1          
+ 101   1          RGB_SetBright(RGB_DataRam.Brightness);
+ 102   1      
+ 103   1      //                      EIP |= SET_BIT2;EIPH |= SET_BIT2;//MUC UU TIEN CAO NHAT
+ 104   1      //                      IPH |= SET_BIT1;IP &= ~SET_BIT1;//MUC UU TIEN CAO NHI
+ 105   1      //                      EIP1 &= ~SET_BIT1; EIPH1 &= ~SET_BIT1;//MUC UU TIEN THAP NHAT
+ 106   1              EA = 1; // enable interrup
+ 107   1       (RGB_DataRam.Flags==0) ? RGB_OffDisplay() : RGB_OnDisplay();
+ 108   1      // RGB_OnDisplay();
+ 109   1              color_disp = RGB_DataRam.color_but_don_da;
+ 110   1              RGB_DataRam.Effect = 0;
+ 111   1      
+ 112   1              while(1)
+ 113   1              {
+ 114   2                      CH554WDTFeed(0x00);     
+C51 COMPILER V9.01   MAIN                                                                  12/13/2025 11:34:19 PAGE 3   
+
+ 115   2      
+ 116   2                      handler_color_button();
+ 117   2                      if(color_disp_old != color_disp) {
+ 118   3                        RGB_SetColor(color_disp, MAX_BRIGHTNESS/2);
+ 119   3                        color_disp_old = color_disp;
+ 120   3                      }               
+ 121   2                      dB_Data = Audio_Convert(ADC_Value);
+ 122   2      
+ 123   2              }
+ 124   1      }
+ 125          
+ 126          
+ 127          #define TIME_SAMLE 6
+ 128          
+ 129          uint32_t xdata key_color[16] = {KEY_RED, KEY_GREEN, KEY_BLUE, KEY_WHITE, KEY_ORANGE, KEY_GREEN2, KEY_BLUE2
+             -, KEY_ORANGE2,
+ 130                                                                          KEY_YELLOW, KEY_CYAN, KEY_PURPLE, KEY_ORANGE3, KEY_PURPLE3, KEY_PURPLE2, KEY_BLUE3, KEY_BLUE4};
+ 131          
+ 132          uint32_t xdata key_colorMH[16] = {KEY_RED_MH, KEY_GREEN_MH, KEY_BLUE_MH, KEY_WHITE_MH, KEY_ORANGE_MH, KEY_
+             -GREEN2_MH, KEY_BLUE2_MH, KEY_ORANGE2_MH,
+ 133                                                                          KEY_YELLOW_MH, KEY_CYAN_MH, KEY_PURPLE_MH, KEY_ORANGE3_MH, KEY_PURPLE3_MH, KEY_PURPLE2_MH, KEY_BLU
+             -E3_MH, KEY_BLUE4_MH};
+ 134          
+ 135          uint32_t color[16] = {RGB_RED, RGB_GREEN, RGB_BLUE, RGB_WHITE, RGB_ORANGE, RGB_GREEN2, RGB_BLUE2, RGB_ORAN
+             -GE2, 
+ 136                                                  RGB_YELLOW, RGB_CYAN, RGB_PURPLE, RGB_ORANGE3, RGB_PURPLE3, RGB_PURPLE2, RGB_BLUE3, RGB_BLUE4};
+ 137          uint32_t stat_but_dd = 0, stat_but_music = 0, stat_but_sp = 0;
+ 138          
+ 139          void handler_color_button(void) 
+ 140          {
+ 141   1              uint8_t tm_cnt = 0;
+ 142   1      
+ 143   1              uint8_t i;
+ 144   1              mDelaymS(1);
+ 145   1      
+ 146   1              if(BUT_DON_DA == 0) {
+ 147   2              stat_but_dd = stat_but_dd + 1;
+ 148   2      //              if(stat_but_dd < TIME_SAMLE)
+ 149   2      //                      stat_but_dd = stat_but_dd + 1;
+ 150   2      //              else 
+ 151   2      //                      stat_but_dd = 0;
+ 152   2              }               
+ 153   1              else 
+ 154   1                      stat_but_dd = 0;
+ 155   1                 //
+ 156   1              if(BUT_MUSIC == 0) {
+ 157   2              stat_but_music = stat_but_music + 1;
+ 158   2      //              if(stat_but_music < TIME_SAMLE)
+ 159   2      //                      stat_but_music = stat_but_music + 1;
+ 160   2      //              else 
+ 161   2      //                      stat_but_music = 0;
+ 162   2              }               
+ 163   1              else 
+ 164   1                      stat_but_music = 0;
+ 165   1               //
+ 166   1              if(BUT_SPEED == 0) {
+ 167   2              stat_but_sp = stat_but_sp + 1;
+ 168   2      //              if(stat_but_sp < TIME_SAMLE)
+ 169   2      //                      stat_but_sp = stat_but_sp + 1;
+ 170   2      //              else 
+ 171   2      //                      stat_but_sp = 0;
+ 172   2              }               
+C51 COMPILER V9.01   MAIN                                                                  12/13/2025 11:34:19 PAGE 4   
+
+ 173   1              else 
+ 174   1                      stat_but_sp = 0;
+ 175   1      
+ 176   1      
+ 177   1              if( (stat_but_dd >= (TIME_SAMLE) && stat_but_music < (TIME_SAMLE) && stat_but_sp < (TIME_SAMLE)) ||
+ 178   1                      (stat_but_music >= (TIME_SAMLE) && stat_but_dd < (TIME_SAMLE) && stat_but_sp < (TIME_SAMLE)) ||
+ 179   1                      (stat_but_sp >= (TIME_SAMLE) && stat_but_dd < (TIME_SAMLE) && stat_but_music < (TIME_SAMLE)) ) {
+ 180   2      
+ 181   2      //      if( (stat_but_dd >= (TIME_SAMLE) && stat_but_music < (TIME_SAMLE) && stat_but_sp < (TIME_SAMLE)) ||
+ 182   2      //              (stat_but_music >= (TIME_SAMLE) && stat_but_dd < (TIME_SAMLE) && stat_but_sp < (TIME_SAMLE)) ||
+ 183   2      //              (stat_but_sp >= (TIME_SAMLE) && stat_but_dd < (TIME_SAMLE) && stat_but_music < (TIME_SAMLE)) ) {
+ 184   2      
+ 185   2                      if(start_select_color == 0) {
+ 186   3                          Flag_IR_Convert = 0;
+ 187   3                          IR_Data = 0;
+ 188   3                              start_select_color = 1;
+ 189   3                      }
+ 190   2      
+ 191   2                      if(Flag_IR_Convert) {
+ 192   3                              for(i = 0; i < 16; i++) {
+ 193   4                                      if(IR_Data == key_color[i] || IR_Data == key_colorMH[i]) {
+ 194   5              
+ 195   5                                              tm_cnt = 1;
+ 196   5              
+ 197   5                                              if(stat_but_dd >= (TIME_SAMLE-1)) 
+ 198   5                                                      RGB_DataRam.color_but_don_da = color[i];
+ 199   5                                              else if (stat_but_music >= (TIME_SAMLE-1))
+ 200   5                                                 RGB_DataRam.color_but_music = color[i];
+ 201   5                                              else if (stat_but_sp >= (TIME_SAMLE-1))
+ 202   5                                                      RGB_DataRam.color_but_sp = color[i];
+ 203   5                              
+ 204   5                                              break;
+ 205   5              
+ 206   5                                      }
+ 207   4                              }
+ 208   3                              Flag_IR_Convert = 0;
+ 209   3                          IR_Data = 0;
+ 210   3                              start_select_color = 0;
+ 211   3                              stat_but_dd = 0;
+ 212   3                              stat_but_music = 0;
+ 213   3                              stat_but_sp = 0;
+ 214   3                      }
+ 215   2      
+ 216   2                      if(stat_but_dd >= (TIME_SAMLE)) {
+ 217   3                         color_disp = RGB_DataRam.color_but_don_da;
+ 218   3                         RGB_DataRam.Effect = 0;
+ 219   3                      }
+ 220   2                      else if (stat_but_music >= (TIME_SAMLE)) {
+ 221   3                              color_disp = RGB_DataRam.color_but_music;
+ 222   3                              RGB_DataRam.Effect = 0;
+ 223   3                      }
+ 224   2                      else if (stat_but_sp >= (TIME_SAMLE)) {
+ 225   3                              color_disp = RGB_DataRam.color_but_sp;
+ 226   3                              RGB_DataRam.Effect = 0;
+ 227   3                      }
+ 228   2              }       
+ 229   1              else {
+ 230   2                      if(Flag_IR_Convert)
+ 231   2                      {
+ 232   3                          Flag_IR_Convert = 0;
+ 233   3                          IR_Data = 0;
+ 234   3                      }               
+C51 COMPILER V9.01   MAIN                                                                  12/13/2025 11:34:19 PAGE 5   
+
+ 235   2              }       
+ 236   1              if(tm_cnt != 0)
+ 237   1                      SAVEDATA();
+ 238   1      }
+ 239          
+ 240          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    991    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =    260       2
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =      4    ----
+   BIT SIZE         =      1    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
