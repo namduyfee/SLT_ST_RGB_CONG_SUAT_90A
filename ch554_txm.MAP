@@ -1,4 +1,4 @@
-LX51 LINKER/LOCATER V4.41                                                               12/15/2025  10:12:45  PAGE 1
+LX51 LINKER/LOCATER V4.41                                                               12/15/2025  10:37:13  PAGE 1
 
 
 LX51 LINKER/LOCATER V4.41, INVOKED BY:
@@ -67,7 +67,7 @@ INPUT MODULES INCLUDED:
          COMMENT TYPE 1: A51 / ASM51 Assembler
   C:\KEIL\C51\LIB\C51L.LIB (RAND)
          COMMENT TYPE 1: A51 / ASM51 Assembler
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 2
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 2
 
 
   C:\KEIL\C51\LIB\C51L.LIB (?C_INIT)
@@ -135,7 +135,7 @@ START     STOP      LENGTH    ALIGN  RELOC    MEMORY CLASS   SEGMENT NAME
 00178CH   0017FBH   000070H   BYTE   INBLOCK  CODE           ?PR?_SETCOLOR?EFFECT
 0017FCH   0017FFH   000004H   ---    ---      **GAP**
 001800H   0018A5H   0000A6H   BYTE   INBLOCK  CODE           ?PR?MAIN?MAIN
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 3
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 3
 
 
 0018A6H   001923H   00007EH   BYTE   INBLOCK  CODE           ?PR?_RGB_SETSPEED?EFFECT
@@ -203,7 +203,7 @@ TIMER2_CAPTURE/TIMER0                   ----- -----  ----- -----
 
 *** NEW ROOT **************************
 
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 4
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 4
 
 
 ADC_INTERRUPT/ADC                       ----- -----  ----- -----
@@ -271,7 +271,7 @@ SAVEDATA/SAVEDATA                       ----- -----  ----- -----
 _WRITEDOUBLEBYTEROM/WRITEFLASHROM       0008H 0008H  0154H 015AH
 
 _RGB_SETCOLOR/EFFECT                    ----- -----  014FH 0153H
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 5
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 5
 
 
   +--> ?PR?SAVEDATA?SAVEDATA
@@ -339,7 +339,7 @@ PUBLIC SYMBOLS OF MODULE:  ch554_txm (DEBUG)
       010018A6H   CODE     ---       _RGB_SetSpeed
       0100179EH   CODE     ---       _SetColor
       01001B1BH   CODE     ---       _SetProcessAutoEffect
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 6
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 6
 
 
       010022C5H   CODE     ---       _SRAND
@@ -407,7 +407,7 @@ PUBLIC SYMBOLS OF MODULE:  ch554_txm (DEBUG)
       00000023H   IDATA    BYTE      Flag_IR_Convert
       00000021H   IDATA    BYTE      Flag_Speed_Effect
 *SFR* 000000B1H   DATA     BYTE      GLOBAL_CFG
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 7
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 7
 
 
 *SFR* 000000B0H.1 DATA     BIT       GPIO_BLUE
@@ -475,7 +475,7 @@ PUBLIC SYMBOLS OF MODULE:  ch554_txm (DEBUG)
 *SFR* 000000B8H.1 DATA     BIT       PT0
 *SFR* 000000B8H.3 DATA     BIT       PT1
 *SFR* 000000B8H.5 DATA     BIT       PT2
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 8
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 8
 
 
 *SFR* 00000090H.5 DATA     BIT       PWM1
@@ -543,7 +543,7 @@ PUBLIC SYMBOLS OF MODULE:  ch554_txm (DEBUG)
 *SFR* 000000F8H   DATA     BYTE      SPI0_STAT
       02000005H   XDATA    BYTE      start_select_color
       02000001H   XDATA    DWORD     stat_but_dd
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 9
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 9
 
 
       020000F8H   XDATA    DWORD     stat_but_music
@@ -611,7 +611,7 @@ PUBLIC SYMBOLS OF MODULE:  ch554_txm (DEBUG)
       0200016CH   XDATA    BYTE      u8TH1_Tmp
       0200016DH   XDATA    BYTE      u8TL0_Tmp
       0200016EH   XDATA    BYTE      u8TL1_Tmp
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 10
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 10
 
 
 *SFR* 000000D8H.7 DATA     BIT       U_IS_NAK
@@ -679,7 +679,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
 
       VALUE       REP       CLASS    TYPE      SYMBOL NAME
       ====================================================
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 11
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 11
 
 
       ---         MODULE    ---      ---       DEBUG
@@ -747,7 +747,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       000000A8H.4 SFRSYM    DATA     BIT       ES
       000000F9H   SFRSYM    DATA     BYTE      SPI0_DATA
       000000B8H   SFRSYM    DATA     BYTE      IP
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 12
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 12
 
 
       000000D8H.5 SFRSYM    DATA     BIT       U_SIE_FREE
@@ -815,7 +815,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       000000F8H   SFRSYM    DATA     BIT       S0_R_FIFO
       000000F8H   SFRSYM    DATA     BYTE      SPI0_STAT
       000000E8H.5 SFRSYM    DATA     BIT       IE_PWMX
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 13
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 13
 
 
       000000DAH   SFRSYM    DATA     BYTE      USB_MIS_ST
@@ -883,7 +883,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       000000B8H.2 SFRSYM    DATA     BIT       PX1
       00000080H.3 SFRSYM    DATA     BIT       CMP_CHAN
       0000009EH   SFRSYM    DATA     BYTE      PWM_CK_SE
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 14
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 14
 
 
       00000083H   SFRSYM    DATA     BYTE      DPH
@@ -951,7 +951,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       0100002EH   LINE      CODE     ---       #73
       01000032H   LINE      CODE     ---       #74
       01000034H   LINE      CODE     ---       #77
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 15
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 15
 
 
       01000036H   LINE      CODE     ---       #80
@@ -1019,7 +1019,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       01001D64H   LINE      CODE     ---       #260
       01001D67H   LINE      CODE     ---       #261
       01001D6AH   LINE      CODE     ---       #262
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 16
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 16
 
 
       01001D6DH   LINE      CODE     ---       #263
@@ -1087,7 +1087,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       000000A8H.6 SFRSYM    DATA     BIT       E_DIS
       000000A8H.7 SFRSYM    DATA     BIT       EA
       000000F8H.3 SFRSYM    DATA     BIT       S0_FREE
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 17
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 17
 
 
       000000B0H.1 SFRSYM    DATA     BIT       PWM2_
@@ -1155,7 +1155,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       0000009CH   SFRSYM    DATA     BYTE      PWM_DATA1
       000000CBH   SFRSYM    DATA     BYTE      RCAP2H
       00000090H.7 SFRSYM    DATA     BIT       TXD1
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 18
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 18
 
 
       0000009BH   SFRSYM    DATA     BYTE      PWM_DATA2
@@ -1223,7 +1223,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       000000E0H   SFRSYM    DATA     BYTE      ACC
       00000097H   SFRSYM    DATA     BYTE      P3_DIR_PU
       000000A8H.1 SFRSYM    DATA     BIT       ET0
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 19
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 19
 
 
       00000088H.5 SFRSYM    DATA     BIT       TF0
@@ -1291,7 +1291,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       000000C0H   SFRSYM    DATA     BYTE      SCON1
       00000098H.4 SFRSYM    DATA     BIT       REN
       00000090H.4 SFRSYM    DATA     BIT       CAP1_
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 20
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 20
 
 
       00000090H.4 SFRSYM    DATA     BIT       T2_
@@ -1333,43 +1333,43 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       000000E6H   SFRSYM    DATA     BYTE      UEP3_DMA_L
 
       01001800H   BLOCK     CODE     ---       LVL=0
+      01001800H   LINE      CODE     ---       #65
       01001800H   LINE      CODE     ---       #66
       01001800H   LINE      CODE     ---       #67
-      01001800H   LINE      CODE     ---       #68
-      01001803H   LINE      CODE     ---       #69
-      0100180AH   LINE      CODE     ---       #70
-      0100180DH   LINE      CODE     ---       #71
-      01001810H   LINE      CODE     ---       #72
-      01001813H   LINE      CODE     ---       #73
-      01001816H   LINE      CODE     ---       #75
-      0100181BH   LINE      CODE     ---       #76
-      01001820H   LINE      CODE     ---       #78
-      01001823H   LINE      CODE     ---       #79
-      01001826H   LINE      CODE     ---       #80
-      0100182DH   LINE      CODE     ---       #82
-      01001834H   LINE      CODE     ---       #84
-      0100183BH   LINE      CODE     ---       #85
-      0100183EH   LINE      CODE     ---       #86
-      01001841H   LINE      CODE     ---       #88
-      0100184AH   LINE      CODE     ---       #90
-      01001850H   LINE      CODE     ---       #91
-      01001853H   LINE      CODE     ---       #92
-      0100185BH   LINE      CODE     ---       #99
-      0100185DH   LINE      CODE     ---       #101
-      01001867H   LINE      CODE     ---       #102
-      0100186CH   LINE      CODE     ---       #103
+      01001803H   LINE      CODE     ---       #68
+      0100180AH   LINE      CODE     ---       #69
+      0100180DH   LINE      CODE     ---       #70
+      01001810H   LINE      CODE     ---       #71
+      01001813H   LINE      CODE     ---       #72
+      01001816H   LINE      CODE     ---       #74
+      0100181BH   LINE      CODE     ---       #75
+      01001820H   LINE      CODE     ---       #77
+      01001823H   LINE      CODE     ---       #78
+      01001826H   LINE      CODE     ---       #79
+      0100182DH   LINE      CODE     ---       #81
+      01001834H   LINE      CODE     ---       #83
+      0100183BH   LINE      CODE     ---       #84
+      0100183EH   LINE      CODE     ---       #85
+      01001841H   LINE      CODE     ---       #87
+      0100184AH   LINE      CODE     ---       #89
+      01001850H   LINE      CODE     ---       #90
+      01001853H   LINE      CODE     ---       #91
+      0100185BH   LINE      CODE     ---       #98
+      0100185DH   LINE      CODE     ---       #100
+      01001867H   LINE      CODE     ---       #101
+      0100186CH   LINE      CODE     ---       #102
+      0100186FH   LINE      CODE     ---       #104
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 21
+
+
       0100186FH   LINE      CODE     ---       #105
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 21
-
-
       0100186FH   LINE      CODE     ---       #106
-      0100186FH   LINE      CODE     ---       #107
-      01001874H   LINE      CODE     ---       #109
-      01001877H   LINE      CODE     ---       #110
-      01001889H   LINE      CODE     ---       #111
-      01001898H   LINE      CODE     ---       #112
+      01001874H   LINE      CODE     ---       #108
+      01001877H   LINE      CODE     ---       #109
+      01001889H   LINE      CODE     ---       #110
+      01001898H   LINE      CODE     ---       #111
+      010018A4H   LINE      CODE     ---       #112
       010018A4H   LINE      CODE     ---       #113
-      010018A4H   LINE      CODE     ---       #115
       ---         BLOCKEND  ---      ---       LVL=0
 
       01001000H   BLOCK     CODE     ---       LVL=0
@@ -1377,76 +1377,76 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       0200014FH   SYMBOL    XDATA    BYTE      tm_cnt
       02000150H   SYMBOL    XDATA    BYTE      i
       ---         BLOCKEND  ---      ---       LVL=1
+      01001000H   LINE      CODE     ---       #128
+      01001000H   LINE      CODE     ---       #129
       01001000H   LINE      CODE     ---       #130
-      01001000H   LINE      CODE     ---       #131
-      01001000H   LINE      CODE     ---       #132
-      01001005H   LINE      CODE     ---       #136
-      0100100BH   LINE      CODE     ---       #137
-      01001011H   LINE      CODE     ---       #138
-      01001027H   LINE      CODE     ---       #139
-      01001029H   LINE      CODE     ---       #141
-      01001030H   LINE      CODE     ---       #142
-      01001036H   LINE      CODE     ---       #143
-      0100104CH   LINE      CODE     ---       #144
-      0100104EH   LINE      CODE     ---       #146
-      01001055H   LINE      CODE     ---       #148
-      0100105BH   LINE      CODE     ---       #149
-      01001071H   LINE      CODE     ---       #151
-      01001073H   LINE      CODE     ---       #153
-      0100107AH   LINE      CODE     ---       #157
+      01001005H   LINE      CODE     ---       #134
+      0100100BH   LINE      CODE     ---       #135
+      01001011H   LINE      CODE     ---       #136
+      01001027H   LINE      CODE     ---       #137
+      01001029H   LINE      CODE     ---       #139
+      01001030H   LINE      CODE     ---       #140
+      01001036H   LINE      CODE     ---       #141
+      0100104CH   LINE      CODE     ---       #142
+      0100104EH   LINE      CODE     ---       #144
+      01001055H   LINE      CODE     ---       #146
+      0100105BH   LINE      CODE     ---       #147
+      01001071H   LINE      CODE     ---       #149
+      01001073H   LINE      CODE     ---       #151
+      0100107AH   LINE      CODE     ---       #155
+      01001122H   LINE      CODE     ---       #157
       01001122H   LINE      CODE     ---       #159
-      01001122H   LINE      CODE     ---       #161
-      01001128H   LINE      CODE     ---       #162
-      0100112BH   LINE      CODE     ---       #163
-      01001135H   LINE      CODE     ---       #164
+      01001128H   LINE      CODE     ---       #160
+      0100112BH   LINE      CODE     ---       #161
+      01001135H   LINE      CODE     ---       #162
+      0100113BH   LINE      CODE     ---       #163
       0100113BH   LINE      CODE     ---       #165
-      0100113BH   LINE      CODE     ---       #167
-      01001142H   LINE      CODE     ---       #168
-      01001153H   LINE      CODE     ---       #169
-      01001192H   LINE      CODE     ---       #171
-      01001198H   LINE      CODE     ---       #173
-      010011AAH   LINE      CODE     ---       #174
-      010011C3H   LINE      CODE     ---       #175
-      010011D5H   LINE      CODE     ---       #176
-      010011EEH   LINE      CODE     ---       #177
-      01001200H   LINE      CODE     ---       #178
-      0100121AH   LINE      CODE     ---       #180
-      0100121CH   LINE      CODE     ---       #182
-      0100121CH   LINE      CODE     ---       #183
-      01001224H   LINE      CODE     ---       #184
-      01001228H   LINE      CODE     ---       #185
-      01001232H   LINE      CODE     ---       #186
-      01001237H   LINE      CODE     ---       #187
-      01001241H   LINE      CODE     ---       #188
-      0100124BH   LINE      CODE     ---       #189
+      01001142H   LINE      CODE     ---       #166
+      01001153H   LINE      CODE     ---       #167
+      01001192H   LINE      CODE     ---       #169
+      01001198H   LINE      CODE     ---       #171
+      010011AAH   LINE      CODE     ---       #172
+      010011C3H   LINE      CODE     ---       #173
+      010011D5H   LINE      CODE     ---       #174
+      010011EEH   LINE      CODE     ---       #175
+      01001200H   LINE      CODE     ---       #176
+      0100121AH   LINE      CODE     ---       #178
+      0100121CH   LINE      CODE     ---       #180
+      0100121CH   LINE      CODE     ---       #181
+      01001224H   LINE      CODE     ---       #182
+      01001228H   LINE      CODE     ---       #183
+      01001232H   LINE      CODE     ---       #184
+      01001237H   LINE      CODE     ---       #185
+      01001241H   LINE      CODE     ---       #186
+      0100124BH   LINE      CODE     ---       #187
+      01001255H   LINE      CODE     ---       #188
       01001255H   LINE      CODE     ---       #190
-      01001255H   LINE      CODE     ---       #192
-      01001267H   LINE      CODE     ---       #193
-      0100126AH   LINE      CODE     ---       #194
-      0100126AH   LINE      CODE     ---       #195
-      0100126CH   LINE      CODE     ---       #196
-      0100127EH   LINE      CODE     ---       #197
-      01001281H   LINE      CODE     ---       #198
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 22
+      01001267H   LINE      CODE     ---       #191
+      0100126AH   LINE      CODE     ---       #192
+      0100126AH   LINE      CODE     ---       #193
+      0100126CH   LINE      CODE     ---       #194
+      0100127EH   LINE      CODE     ---       #195
+      01001281H   LINE      CODE     ---       #196
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 22
 
 
-      01001281H   LINE      CODE     ---       #199
-      01001283H   LINE      CODE     ---       #200
-      01001295H   LINE      CODE     ---       #201
-      010012A1H   LINE      CODE     ---       #202
-      010012A6H   LINE      CODE     ---       #203
-      010012A6H   LINE      CODE     ---       #204
-      010012A8H   LINE      CODE     ---       #205
-      010012A8H   LINE      CODE     ---       #206
-      010012ADH   LINE      CODE     ---       #207
-      010012B2H   LINE      CODE     ---       #208
-      010012B2H   LINE      CODE     ---       #209
-      010012B4H   LINE      CODE     ---       #210
+      01001281H   LINE      CODE     ---       #197
+      01001283H   LINE      CODE     ---       #198
+      01001295H   LINE      CODE     ---       #199
+      010012A1H   LINE      CODE     ---       #200
+      010012A6H   LINE      CODE     ---       #201
+      010012A6H   LINE      CODE     ---       #202
+      010012A8H   LINE      CODE     ---       #203
+      010012A8H   LINE      CODE     ---       #204
+      010012ADH   LINE      CODE     ---       #205
+      010012B2H   LINE      CODE     ---       #206
+      010012B2H   LINE      CODE     ---       #207
+      010012B4H   LINE      CODE     ---       #208
+      010012BEH   LINE      CODE     ---       #209
+      010012BEH   LINE      CODE     ---       #210
       010012BEH   LINE      CODE     ---       #211
-      010012BEH   LINE      CODE     ---       #212
-      010012BEH   LINE      CODE     ---       #213
-      010012C4H   LINE      CODE     ---       #214
-      010012C7H   LINE      CODE     ---       #215
+      010012C4H   LINE      CODE     ---       #212
+      010012C7H   LINE      CODE     ---       #213
       ---         BLOCKEND  ---      ---       LVL=0
 
       ---         MODULE    ---      ---       TIMER0
@@ -1495,7 +1495,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       0000009DH   SFRSYM    DATA     BYTE      PWM_CTRL
       000000B0H.2 SFRSYM    DATA     BIT       AIN3
       000000E8H   SFRSYM    DATA     BIT       IE_SPI0
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 23
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 23
 
 
       000000E8H   SFRSYM    DATA     BYTE      IE_EX
@@ -1563,7 +1563,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       000000B0H.4 SFRSYM    DATA     BIT       PWM2
       000000C8H.1 SFRSYM    DATA     BIT       C_T2
       000000B0H.5 SFRSYM    DATA     BIT       LED7_DATA_A
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 24
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 24
 
 
       00000090H.5 SFRSYM    DATA     BIT       LED7_DATA_B
@@ -1631,7 +1631,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       00000088H   SFRSYM    DATA     BIT       IT0
       000000A8H   SFRSYM    DATA     BIT       EX0
       000000ECH   SFRSYM    DATA     WORD      UEP0_DMA
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 25
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 25
 
 
       000000CDH   SFRSYM    DATA     BYTE      TH2
@@ -1699,7 +1699,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       000000C0H.4 SFRSYM    DATA     BIT       U1REN
       000000B0H   SFRSYM    DATA     BIT       RXD
       000000D8H.4 SFRSYM    DATA     BIT       UIF_FIFO_OV
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 26
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 26
 
 
       000000B0H.1 SFRSYM    DATA     BIT       TXD
@@ -1767,7 +1767,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       01001D2AH   LINE      CODE     ---       #73
       01001D2CH   LINE      CODE     ---       #74
       01001D2EH   LINE      CODE     ---       #75
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 27
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 27
 
 
       01001D30H   LINE      CODE     ---       #76
@@ -1835,7 +1835,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       01000F80H   LINE      CODE     ---       #142
       01000F84H   LINE      CODE     ---       #143
       01000F86H   LINE      CODE     ---       #145
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 28
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 28
 
 
       01000F86H   LINE      CODE     ---       #146
@@ -1903,7 +1903,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       000000D8H   SFRSYM    DATA     BIT       UIF_BUS_RST
       000000F8H.7 SFRSYM    DATA     BIT       S0_FST_ACT
       00000090H.5 SFRSYM    DATA     BIT       AIN2
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 29
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 29
 
 
       0000009DH   SFRSYM    DATA     BYTE      PWM_CTRL
@@ -1971,7 +1971,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       000000D0H.2 SFRSYM    DATA     BIT       OV
       000000CAH   SFRSYM    DATA     BYTE      RCAP2L
       00000090H.5 SFRSYM    DATA     BIT       PWM1
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 30
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 30
 
 
       000000B0H.4 SFRSYM    DATA     BIT       PWM2
@@ -2039,7 +2039,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       00000098H.2 SFRSYM    DATA     BIT       RB8
       0000008CH   SFRSYM    DATA     BYTE      TH0
       0000008DH   SFRSYM    DATA     BYTE      TH1
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 31
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 31
 
 
       00000088H   SFRSYM    DATA     BIT       IT0
@@ -2107,7 +2107,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       00000084H   SFRSYM    DATA     WORD      ROM_ADDR
       00000090H.7 SFRSYM    DATA     BIT       GPIO_RED
       000000C0H.4 SFRSYM    DATA     BIT       U1REN
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 32
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 32
 
 
       000000B0H   SFRSYM    DATA     BIT       RXD
@@ -2175,7 +2175,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       01001C6DH   LINE      CODE     ---       #54
       01001C6DH   LINE      CODE     ---       #55
       01001C72H   LINE      CODE     ---       #56
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 33
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 33
 
 
       ---         BLOCKEND  ---      ---       LVL=0
@@ -2243,7 +2243,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       01000FBCH   LINE      CODE     ---       #103
       01000FBCH   LINE      CODE     ---       #104
       01000FCCH   LINE      CODE     ---       #105
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 34
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 34
 
 
       01000FDCH   LINE      CODE     ---       #106
@@ -2311,7 +2311,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       01001DB7H   LINE      CODE     ---       #152
       01001DB9H   LINE      CODE     ---       #153
       ---         BLOCKEND  ---      ---       LVL=0
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 35
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 35
 
 
 
@@ -2379,7 +2379,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       01001303H   LINE      CODE     ---       #235
       01001306H   LINE      CODE     ---       #236
       0100130DH   LINE      CODE     ---       #237
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 36
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 36
 
 
       01001315H   LINE      CODE     ---       #239
@@ -2447,7 +2447,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       0100145CH   LINE      CODE     ---       #339
       0100145CH   LINE      CODE     ---       #340
       0100145CH   LINE      CODE     ---       #341
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 37
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 37
 
 
       0100145EH   LINE      CODE     ---       #343
@@ -2515,7 +2515,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       0100015DH   LINE      CODE     ---       #402
       0100015DH   LINE      CODE     ---       #403
       01000162H   LINE      CODE     ---       #404
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 38
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 38
 
 
       01000175H   LINE      CODE     ---       #405
@@ -2583,7 +2583,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       0100046EH   LINE      CODE     ---       #467
       01000496H   LINE      CODE     ---       #468
       01000496H   LINE      CODE     ---       #469
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 39
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 39
 
 
       0100049BH   LINE      CODE     ---       #470
@@ -2651,7 +2651,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       0100064CH   LINE      CODE     ---       #565
       0100064CH   LINE      CODE     ---       #566
       0100064FH   LINE      CODE     ---       #567
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 40
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 40
 
 
       01000654H   LINE      CODE     ---       #568
@@ -2719,7 +2719,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       0100196CH   LINE      CODE     ---       #631
       0100196CH   LINE      CODE     ---       #632
       01001972H   LINE      CODE     ---       #633
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 41
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 41
 
 
       01001972H   LINE      CODE     ---       #634
@@ -2787,7 +2787,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       01000956H   LINE      CODE     ---       #697
       0100096AH   LINE      CODE     ---       #698
       0100096AH   LINE      CODE     ---       #699
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 42
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 42
 
 
       01000974H   LINE      CODE     ---       #700
@@ -2855,7 +2855,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       01000AFCH   LINE      CODE     ---       #767
       01000B0EH   LINE      CODE     ---       #768
       01000B10H   LINE      CODE     ---       #769
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 43
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 43
 
 
       01000B22H   LINE      CODE     ---       #770
@@ -2923,7 +2923,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       01000D9CH   LINE      CODE     ---       #834
       01000DAEH   LINE      CODE     ---       #835
       01000DAEH   LINE      CODE     ---       #836
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 44
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 44
 
 
       01000DBCH   LINE      CODE     ---       #837
@@ -2991,7 +2991,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       000000B0H   SFRSYM    DATA     BIT       PWM1_
       00000090H   SFRSYM    DATA     BIT       CAP1
       00000090H   SFRSYM    DATA     BIT       T2
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 45
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 45
 
 
       00000086H   SFRSYM    DATA     BYTE      ROM_CTRL
@@ -3059,7 +3059,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       000000C2H   SFRSYM    DATA     BYTE      SBAUD1
       000000C0H   SFRSYM    DATA     BIT       U1RI
       0000009CH   SFRSYM    DATA     BYTE      PWM_DATA1
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 46
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 46
 
 
       000000CBH   SFRSYM    DATA     BYTE      RCAP2H
@@ -3127,7 +3127,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       000000C4H   SFRSYM    DATA     BYTE      TKEY_DATL
       00000093H   SFRSYM    DATA     BYTE      P1_DIR_PU
       000000E0H   SFRSYM    DATA     BYTE      ACC
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 47
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 47
 
 
       00000097H   SFRSYM    DATA     BYTE      P3_DIR_PU
@@ -3195,7 +3195,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       000000B1H   SFRSYM    DATA     BYTE      GLOBAL_CFG
       000000C0H   SFRSYM    DATA     BYTE      SCON1
       00000098H.4 SFRSYM    DATA     BIT       REN
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 48
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 48
 
 
       00000090H.4 SFRSYM    DATA     BIT       CAP1_
@@ -3263,7 +3263,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       000000A0H   SFRSYM    DATA     BYTE      P2
       000000B0H   SFRSYM    DATA     BYTE      P3
       000000B0H.4 SFRSYM    DATA     BIT       T0
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 49
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 49
 
 
       000000D0H.6 SFRSYM    DATA     BIT       AC
@@ -3331,7 +3331,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       000000B9H   SFRSYM    DATA     BYTE      CLOCK_CFG
       00000090H.6 SFRSYM    DATA     BIT       TIN4
       00000090H.6 SFRSYM    DATA     BIT       RXD1
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 50
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 50
 
 
       00000090H.7 SFRSYM    DATA     BIT       TIN5
@@ -3399,7 +3399,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       000000A8H.1 SFRSYM    DATA     BIT       ET0
       00000088H.5 SFRSYM    DATA     BIT       TF0
       000000A8H.3 SFRSYM    DATA     BIT       ET1
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 51
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 51
 
 
       00000088H.7 SFRSYM    DATA     BIT       TF1
@@ -3467,7 +3467,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       000000B0H.7 SFRSYM    DATA     BIT       UDM
       000000C9H   SFRSYM    DATA     BYTE      T2MOD
       000000C8H   SFRSYM    DATA     BYTE      T2CON
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 52
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 52
 
 
       000000B0H.6 SFRSYM    DATA     BIT       UDP
@@ -3535,7 +3535,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       01001DA0H   PUBLIC    CODE     ---       ADC_Init
       000000D8H.3 SFRSYM    DATA     BIT       UIF_HST_SOF
       000000B0H.4 SFRSYM    DATA     BIT       RXD1_
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 53
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 53
 
 
       000000D8H   SFRSYM    DATA     BIT       UIF_DETECT
@@ -3603,7 +3603,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       000000B0H.3 SFRSYM    DATA     BIT       INT1
       00000090H.1 SFRSYM    DATA     BIT       TIN1
       00000090H.4 SFRSYM    DATA     BIT       TIN2
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 54
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 54
 
 
       000000FFH   SFRSYM    DATA     BYTE      WDOG_COUNT
@@ -3671,7 +3671,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       000000F0H   SFRSYM    DATA     BYTE      B
       0000009FH   SFRSYM    DATA     BYTE      ADC_DATA
       000000C8H   SFRSYM    DATA     BIT       CP_RL2
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 55
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 55
 
 
       000000C4H   SFRSYM    DATA     BYTE      TKEY_DATL
@@ -3739,7 +3739,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       000000C1H   SFRSYM    DATA     BYTE      SBUF1
       000000C8H.3 SFRSYM    DATA     BIT       EXEN2
       000000B1H   SFRSYM    DATA     BYTE      GLOBAL_CFG
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 56
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 56
 
 
       000000C0H   SFRSYM    DATA     BYTE      SCON1
@@ -3807,7 +3807,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       02000162H   PUBLIC    XDATA    BYTE      _Flag_color
       02000161H   PUBLIC    XDATA    BYTE      _FlagFade
       02000160H   PUBLIC    XDATA    BYTE      Step_Duty
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 57
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 57
 
 
       0200015EH   PUBLIC    XDATA    WORD      Time_Wait
@@ -3875,7 +3875,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       000000F9H   SFRSYM    DATA     BYTE      SPI0_DATA
       000000B8H   SFRSYM    DATA     BYTE      IP
       000000D8H.5 SFRSYM    DATA     BIT       U_SIE_FREE
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 58
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 58
 
 
       000000D8H.6 SFRSYM    DATA     BIT       U_TOG_OK
@@ -3943,7 +3943,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       000000E8H.3 SFRSYM    DATA     BIT       IE_ADC
       00000080H.5 SFRSYM    DATA     BIT       ADC_IF
       00000080H.4 SFRSYM    DATA     BIT       ADC_START
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 59
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 59
 
 
       00000090H.5 SFRSYM    DATA     BIT       MOSI
@@ -4011,7 +4011,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       000000B8H.5 SFRSYM    DATA     BIT       PT2
       000000D0H.4 SFRSYM    DATA     BIT       RS1
       000000C0H.7 SFRSYM    DATA     BIT       U1SM0
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 60
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 60
 
 
       00000088H.6 SFRSYM    DATA     BIT       TR1
@@ -4079,7 +4079,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       010014E2H   LINE      CODE     ---       #9
       010014E2H   LINE      CODE     ---       #10
       010014F7H   LINE      CODE     ---       #11
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 61
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 61
 
 
       010014F7H   LINE      CODE     ---       #12
@@ -4147,7 +4147,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       01001602H   LINE      CODE     ---       #77
       0100160DH   LINE      CODE     ---       #78
       0100161AH   LINE      CODE     ---       #79
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 62
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 62
 
 
       01001622H   LINE      CODE     ---       #80
@@ -4215,7 +4215,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
       0100174CH   LINE      CODE     ---       #146
       0100175DH   LINE      CODE     ---       #147
       01001764H   LINE      CODE     ---       #148
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 63
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 63
 
 
       01001766H   LINE      CODE     ---       #149
@@ -4283,7 +4283,7 @@ SYMBOL TABLE OF MODULE:  ch554_txm (DEBUG)
 
       ---         MODULE    ---      ---       ?C?LSTXDATA
       0100200EH   PUBLIC    CODE     ---       ?C?LSTXDATA
-LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:12:45  PAGE 64
+LX51 LINKER/LOCATER V4.41                                                             12/15/2025  10:37:13  PAGE 64
 
 
 

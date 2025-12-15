@@ -44,7 +44,6 @@ const UINT32 code  VALUE1 = 0xff0000, VALUE2 = 0x00ff00, VALUE3 = 0x0000ff;
 
 UINT32 VALUE1Ram,VALUE2Ram,VALUE3Ram;
 
-
 //
 
 uint32_t xdata i,j,Tongle_Led =0;
@@ -111,7 +110,6 @@ main( )
 		  RGB_SetColor(color_disp, MAX_BRIGHTNESS/2);
 		  color_disp_old = color_disp;
 		}		
-
 	}
 }
 
@@ -170,11 +168,11 @@ void handler_color_button(void)
 	
 					tm_cnt = 1;
 	
-					if(stat_but_dd >= (TIME_SAMLE-1)) 
+					if(stat_but_dd >= TIME_SAMLE) 
 						VALUE1Ram = color[i];
-					else if (stat_but_music >= (TIME_SAMLE-1))
+					else if (stat_but_music >= TIME_SAMLE)
 					   VALUE2Ram = color[i];
-					else if (stat_but_sp >= (TIME_SAMLE-1))
+					else if (stat_but_sp >= TIME_SAMLE)
 						VALUE3Ram = color[i];
 			
 					break;
