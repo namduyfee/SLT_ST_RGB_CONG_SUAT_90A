@@ -1,0 +1,1 @@
+"Project\Source\Timer0.c" LARGE OMF2 ROM(COMPACT) OPTIMIZE (SIZE) BROWSE NOAREGS INCDIR(.\Project\include) DEBUG PRINT(.\Timer0.lst) OBJECT(Timer0.obj)

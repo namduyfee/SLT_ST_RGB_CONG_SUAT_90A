@@ -148,9 +148,6 @@ typedef struct
     uint8_t   LastEffect;
     uint8_t   SaveEffect;
     uint8_t   AutoEffect;
-	uint32_t color_but_don_da;
-	uint32_t color_but_music;
-	uint32_t color_but_sp;
 }RGB_DATA;
 #define DUTYBLUE 				0
 #define DUTYGREEN 			1

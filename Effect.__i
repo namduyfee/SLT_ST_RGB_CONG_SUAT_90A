@@ -1,0 +1,1 @@
+"Project\Source\Effect.c" LARGE OMF2 ROM(COMPACT) OPTIMIZE (SIZE) BROWSE NOAREGS INCDIR(.\Project\include) DEBUG PRINT(.\Effect.lst) OBJECT(Effect.obj)

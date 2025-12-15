@@ -1,10 +1,10 @@
-C51 COMPILER V9.01   TIMER0                                                                12/13/2025 09:59:39 PAGE 1   
+C51 COMPILER V9.01   TIMER0                                                                12/15/2025 08:58:31 PAGE 1   
 
 
 C51 COMPILER V9.01, COMPILATION OF MODULE TIMER0
 OBJECT MODULE PLACED IN Timer0.obj
-COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Project\Source\Timer0.c LARGE ROM(COMPACT) OPTIMIZE(SIZE) BROWSE NOAREGS IN
-                    -CDIR(.\Project\include) DEBUG OBJECTEXTEND PRINT(.\Timer0.lst) OBJECT(Timer0.obj)
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Project\Source\Timer0.c LARGE OMF2 ROM(COMPACT) OPTIMIZE(SIZE) BROWSE NOARE
+                    -GS INCDIR(.\Project\include) DEBUG PRINT(.\Timer0.lst) OBJECT(Timer0.obj)
 
 line level    source
 
@@ -62,7 +62,7 @@ line level    source
   51   1              T2MOD &= ~bT1_CLK;
   52   1              TMOD &= ~(bT1_CT | bT1_GATE | bT1_M1);
   53   1              TMOD |= bT1_M0;
-C51 COMPILER V9.01   TIMER0                                                                12/13/2025 09:59:39 PAGE 2   
+C51 COMPILER V9.01   TIMER0                                                                12/15/2025 08:58:31 PAGE 2   
 
   54   1              u8TH1_Tmp = (65536-Counter)>>8;
   55   1              u8TL1_Tmp = (65536-Counter)&0xff;  
@@ -126,7 +126,7 @@ line level    source
  111   1              if((EXF2==1)&&(Flag_Capture==0)) // capture suon len
  112   1              {
  113   2                      EXF2 = 0;
-C51 COMPILER V9.01   TIMER0                                                                12/13/2025 09:59:39 PAGE 3   
+C51 COMPILER V9.01   TIMER0                                                                12/15/2025 08:58:31 PAGE 3   
 
  114   2                      TR2 = 0;
  115   2                      T2MOD &= ~bT2_CAP_M0;                                                           // set capture suon xuong
@@ -173,13 +173,17 @@ line level    source
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    505    ----
+   CODE SIZE        =    514    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =      5       4
    PDATA SIZE       =   ----    ----
    DATA SIZE        =   ----    ----
    IDATA SIZE       =      6    ----
    BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
 END OF MODULE INFORMATION.
 
 

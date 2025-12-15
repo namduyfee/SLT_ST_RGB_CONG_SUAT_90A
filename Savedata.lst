@@ -1,42 +1,51 @@
-C51 COMPILER V9.01   SAVEDATA                                                              12/13/2025 09:59:39 PAGE 1   
+C51 COMPILER V9.01   SAVEDATA                                                              12/15/2025 09:15:00 PAGE 1   
 
 
 C51 COMPILER V9.01, COMPILATION OF MODULE SAVEDATA
 OBJECT MODULE PLACED IN Savedata.obj
-COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Project\Source\Savedata.c LARGE ROM(COMPACT) OPTIMIZE(SIZE) BROWSE NOAREGS 
-                    -INCDIR(.\Project\include) DEBUG OBJECTEXTEND PRINT(.\Savedata.lst) OBJECT(Savedata.obj)
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Project\Source\Savedata.c LARGE OMF2 ROM(COMPACT) OPTIMIZE(SIZE) BROWSE NOA
+                    -REGS INCDIR(.\Project\include) DEBUG PRINT(.\Savedata.lst) OBJECT(Savedata.obj)
 
 line level    source
 
    1          #include "savedata.h"
    2          #include "WriteFlashROM.h"
    3          #include "Effect.h"
-   4          xdata UINT8C* Pointer;
-   5          extern RGB_DATA RGB_DataRam;
+   4          
+   5          extern const UINT32 code VALUE1, VALUE2, VALUE3;
    6          
-   7          
-   8          void SAVEDATA(void)
-   9          {
-  10   1      
-  11   1              WriteDoubleByteROM(BASE_OBJECT_ADDR,(uint16_t*)&RGB_DataRam,(sizeof(RGB_DATA)+1)>>1);
-  12   1      }
-  13          void LOADSAVEDATA(void)
-  14          {
-  15   1      
-  16   1              RGB_DataRam =   *((RGB_DATA code*)(BASE_OBJECT_ADDR));
-  17   1      
-  18   1      }
+   7          extern UINT32 VALUE1Ram,VALUE2Ram,VALUE3Ram;
+   8          
+   9          void SAVEDATA(void)
+  10          {
+  11   1              WriteDoubleByteROM(&VALUE1,(uint16_t*)&VALUE1Ram,2);
+*** WARNING C214 IN LINE 11 OF PROJECT\SOURCE\SAVEDATA.C: 'Argument': conversion: pointer to non-pointer
+  12   1              WriteDoubleByteROM(&VALUE2,(uint16_t*)&VALUE2Ram,2);
+*** WARNING C214 IN LINE 12 OF PROJECT\SOURCE\SAVEDATA.C: 'Argument': conversion: pointer to non-pointer
+  13   1              WriteDoubleByteROM(&VALUE3,(uint16_t*)&VALUE3Ram,2);
+*** WARNING C214 IN LINE 13 OF PROJECT\SOURCE\SAVEDATA.C: 'Argument': conversion: pointer to non-pointer
+  14   1      }
+  15          void LOADSAVEDATA(void)
+  16          {
+  17   1              VALUE1Ram = VALUE1;
+  18   1              VALUE2Ram = VALUE2;
+  19   1              VALUE3Ram = VALUE3;
+  20   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =     41    ----
+   CODE SIZE        =    102    ----
    CONSTANT SIZE    =   ----    ----
-   XDATA SIZE       =      2    ----
+   XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
    DATA SIZE        =   ----    ----
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
 END OF MODULE INFORMATION.
 
 
-C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
+C51 COMPILATION COMPLETE.  3 WARNING(S),  0 ERROR(S)

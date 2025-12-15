@@ -1,18 +1,20 @@
 #include "savedata.h"
 #include "WriteFlashROM.h"
 #include "Effect.h"
-xdata UINT8C* Pointer;
-extern RGB_DATA RGB_DataRam;
 
+extern const UINT32 code VALUE1, VALUE2, VALUE3;
+
+extern UINT32 VALUE1Ram,VALUE2Ram,VALUE3Ram;
 
 void SAVEDATA(void)
 {
-
-	WriteDoubleByteROM(BASE_OBJECT_ADDR,(uint16_t*)&RGB_DataRam,(sizeof(RGB_DATA)+1)>>1);
+	WriteDoubleByteROM(&VALUE1,(uint16_t*)&VALUE1Ram,2);
+	WriteDoubleByteROM(&VALUE2,(uint16_t*)&VALUE2Ram,2);
+	WriteDoubleByteROM(&VALUE3,(uint16_t*)&VALUE3Ram,2);
 }
 void LOADSAVEDATA(void)
 {
-
-	RGB_DataRam = 	*((RGB_DATA code*)(BASE_OBJECT_ADDR));
-
+	VALUE1Ram = VALUE1;
+	VALUE2Ram = VALUE2;
+	VALUE3Ram = VALUE3;
 }

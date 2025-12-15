@@ -39,16 +39,22 @@ void handler_color_button(void);
 uint32_t color_disp;
 uint32_t color_disp_old = 0;
 uint8_t start_select_color = 0;
+
+const UINT32 code  VALUE1 = 0xff0000, VALUE2 = 0x00ff00, VALUE3 = 0x0000ff;
+
+UINT32 VALUE1Ram,VALUE2Ram,VALUE3Ram;
+
+
 //
 
 uint32_t xdata i,j,Tongle_Led =0;
 uint8_t idata Flag_IR_Convert, Flag_Speed_Effect, Display_Effect, Run_Effect_Done;
 uint32_t xdata IR_Data = 0;
 uint8_t xdata dB_Data;
-RGB_DATA RGB_DataRam;
 extern uint8_t xdata _FlagFade;
 extern uint8_t idata But_Count;
 bit BIT_TMP;
+RGB_DATA RGB_DataRam; 
 uint8_t xdata DataFlash[3] = {0x01,0x02,0x03};
 extern uint8_t idata ADC_Value;
 sbit	LED2=P1^5;
@@ -56,7 +62,7 @@ sbit	LED=P1^4;
 sbit 	LED_R = P1^7;
 sbit 	LED_G = P1^0;
 sbit 	LED_B = P3^1;
-//UINT8  a;
+
 main( )
 {
 	CfgFsys(); 
@@ -69,44 +75,32 @@ main( )
 	CH554WDTModeSelect(1);
 	CH554WDTFeed(0x00);
 
-//	mInitSTDIO( );                                                             //??0???
-//  UART1Setup();
-//	printf("start ...\n");
 	RGB_PinInit();
 	LOADSAVEDATA(); // load gia tri luu trong APROM
 	mDelaymS(10);
-
-	 
+		 
 	Timer0_Init(8);								//50us
 	
 	Timer1_Init(8);									// 4us
 	Timer2_InputCapture_Init();
 	ADC_Init();
-		But_Count = 6 + RGB_DataRam.Effect;
 
-//    if(!RGB_DataRam.Brightness)
-//        RGB_DataRam.Brightness = MAX_BRIGHTNESS;
-    //RGB_SetModeSpeed(RGB_DataRam.Mode);
+	But_Count = 6 + RGB_DataRam.Effect;
+
     if(!RGB_DataRam.Speed)
         RGB_DataRam.Speed = 12;
     RGB_SetSpeed(RGB_DataRam.Speed);
-     if((RGB_DataRam.Color.DutyRed == 0xFF) && (RGB_DataRam.Color.DutyGreen == 0xFF) && (RGB_DataRam.Color.DutyBlue==0xff))
-		 //if(!RGB_DataRam.Color.DutyRed && !RGB_DataRam.Color.DutyGreen && !RGB_DataRam.Color.DutyBlue) //Check
-        RGB_SetColor(RGB_WHITE, RGB_DataRam.Brightness);
-    SetColor(RED, RGB_DataRam.Color.DutyRed, RGB_DataRam.Brightness);
-    SetColor(GREEN, RGB_DataRam.Color.DutyGreen, RGB_DataRam.Brightness);
-    SetColor(BLUE, RGB_DataRam.Color.DutyBlue, RGB_DataRam.Brightness);
-    
-    RGB_SetBright(RGB_DataRam.Brightness);
+
+
 
 //			EIP |= SET_BIT2;EIPH |= SET_BIT2;//MUC UU TIEN CAO NHAT
 //			IPH |= SET_BIT1;IP &= ~SET_BIT1;//MUC UU TIEN CAO NHI
 //			EIP1 &= ~SET_BIT1; EIPH1 &= ~SET_BIT1;//MUC UU TIEN THAP NHAT
 	EA = 1; // enable interrup
- (RGB_DataRam.Flags==0) ? RGB_OffDisplay() : RGB_OnDisplay();
-// RGB_OnDisplay();
-	color_disp = RGB_DataRam.color_but_don_da;
+
+	color_disp = RGB_GREEN;
 	RGB_DataRam.Effect = 0;
+	RGB_OnDisplay();
 
 	while(1)
 	{
@@ -117,11 +111,9 @@ main( )
 		  RGB_SetColor(color_disp, MAX_BRIGHTNESS/2);
 		  color_disp_old = color_disp;
 		}		
-		dB_Data = Audio_Convert(ADC_Value);
 
 	}
 }
-
 
 #define TIME_SAMLE 6
 
@@ -140,7 +132,7 @@ void handler_color_button(void)
 	uint8_t tm_cnt = 0;
 
 	uint8_t i;
-	/* sample button avoid noise */
+	/* sample button avoid noise (TIME_SAMLE * 1ms) */
 	mDelaymS(1);
 	if(BUT_DON_DA == 0) {
 		stat_but_dd = stat_but_dd + 1;
@@ -159,6 +151,8 @@ void handler_color_button(void)
 	}		
 	else 
 		stat_but_sp = 0;
+
+		   
 	// pressed loop
 	if( (stat_but_dd >= (TIME_SAMLE) && stat_but_music < (TIME_SAMLE) && stat_but_sp < (TIME_SAMLE)) ||
 		(stat_but_music >= (TIME_SAMLE) && stat_but_dd < (TIME_SAMLE) && stat_but_sp < (TIME_SAMLE)) ||
@@ -177,11 +171,11 @@ void handler_color_button(void)
 					tm_cnt = 1;
 	
 					if(stat_but_dd >= (TIME_SAMLE-1)) 
-						RGB_DataRam.color_but_don_da = color[i];
+						VALUE1Ram = color[i];
 					else if (stat_but_music >= (TIME_SAMLE-1))
-					   RGB_DataRam.color_but_music = color[i];
+					   VALUE2Ram = color[i];
 					else if (stat_but_sp >= (TIME_SAMLE-1))
-						RGB_DataRam.color_but_sp = color[i];
+						VALUE3Ram = color[i];
 			
 					break;
 	
@@ -196,15 +190,15 @@ void handler_color_button(void)
 		}
 
 		if(stat_but_dd >= (TIME_SAMLE)) {
-		   color_disp = RGB_DataRam.color_but_don_da;
+		   color_disp = VALUE1Ram;
 		   RGB_DataRam.Effect = 0;
 		}
 		else if (stat_but_music >= (TIME_SAMLE)) {
-			color_disp = RGB_DataRam.color_but_music;
+			color_disp = VALUE2Ram;
 		 	RGB_DataRam.Effect = 0;
 		}
 		else if (stat_but_sp >= (TIME_SAMLE)) {
-			color_disp = RGB_DataRam.color_but_sp;
+			color_disp = VALUE3Ram;
 		 	RGB_DataRam.Effect = 0;
 		}
 	} 	
