@@ -42,7 +42,7 @@ uint8_t start_select_color = 0;
 UINT16 brtnessold = 0; 
 
 const UINT32 code  VALUE1 = 0xff0000, VALUE2 = 0x00ff00, VALUE3 = 0x0000ff;
-const UINT16 code BRTNESS = 0x000f;
+const UINT16 code BRTNESS = 0x000A;
 UINT32 VALUE1Ram,VALUE2Ram,VALUE3Ram;
 
 
@@ -74,13 +74,12 @@ main( )
 	P3_DIR_PU |= 0x3F;		//0x3F;
 	P1_DIR_PU =	0xFD;
 		
-	CH554WDTModeSelect(1);
-	CH554WDTFeed(0x00);
-
-//	RGB_PinInit();
 	LOADSAVEDATA(); // load gia tri luu trong APROM
-	mDelaymS(10);
-		 
+	mDelaymS(20);
+		
+	CH554WDTModeSelect(1);
+	CH554WDTFeed(0x00);	
+			 
 	Timer0_Init(8);								//50us
 	
 	Timer1_Init(8);									// 4us
@@ -93,28 +92,19 @@ main( )
         RGB_DataRam.Speed = 12;
     RGB_SetSpeed(RGB_DataRam.Speed);
 
-
-
-//			EIP |= SET_BIT2;EIPH |= SET_BIT2;//MUC UU TIEN CAO NHAT
-//			IPH |= SET_BIT1;IP &= ~SET_BIT1;//MUC UU TIEN CAO NHI
-//			EIP1 &= ~SET_BIT1; EIPH1 &= ~SET_BIT1;//MUC UU TIEN THAP NHAT
 	EA = 1; // enable interrup
 
 	color_disp = RGB_GREEN;
 	RGB_DataRam.Effect = 0;
+	RGB_SetColor(color_disp, (BRIGHTNESSRam&0x00FF));
+	RGB_OnDisplay();
 	
-//	RGB_SetColor(color_disp, (UINT8)BRIGHTNESSRam);
-
-	
-
 	while(1)
 	{
 		CH554WDTFeed(0x00);	
-
 		handler_color_button();
 		if(color_disp_old != color_disp || brtnessold != BRIGHTNESSRam) {
-		  RGB_SetColor(color_disp, (UINT8)BRIGHTNESSRam);
-		  RGB_OnDisplay();
+		  RGB_SetColor(color_disp, (BRIGHTNESSRam&0x00FF));
 		  color_disp_old = color_disp;
 		  brtnessold = BRIGHTNESSRam; 
 		}		

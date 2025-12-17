@@ -95,9 +95,7 @@ void RGB_SetBright(uint8_t Brightness)
     RedGreenBlue[RED].Duty = (uint16_t)(RGB_DataRam.Color.DutyRed * Brightness) / MAX_BRIGHTNESS;
     RedGreenBlue[GREEN].Duty = (uint16_t)(RGB_DataRam.Color.DutyGreen * Brightness) / MAX_BRIGHTNESS;
     RedGreenBlue[BLUE].Duty = (uint16_t)(RGB_DataRam.Color.DutyBlue * Brightness) / MAX_BRIGHTNESS;
-//     RedGreenBlue[RED].Duty =(uint16_t)(( (uint16_t)(RGB_DataRam.Color.DutyRed * Brightness) / MAX_BRIGHTNESS)*(CONST_BRIGHTNESS*(float)Brightness));
-//    RedGreenBlue[GREEN].Duty = (uint16_t)(( (uint16_t)(RGB_DataRam.Color.DutyGreen * Brightness) / MAX_BRIGHTNESS)*(CONST_BRIGHTNESS*(float)Brightness));
-//    RedGreenBlue[BLUE].Duty = (uint16_t)(( (uint16_t)(RGB_DataRam.Color.DutyBlue * Brightness) / MAX_BRIGHTNESS)*(CONST_BRIGHTNESS*(float)Brightness));
+
 }
 void RGB_SetColor(uint32_t Color, uint8_t Brightness)
 {
@@ -106,11 +104,8 @@ void RGB_SetColor(uint32_t Color, uint8_t Brightness)
     RGB_DataRam.Color.DutyBlue = (uint8_t)(Color);
     if(RGB_DataRam.Effect == 0)
     {
-       // RGB_DataRom.Color = RGB_DataRam.Color; //Save
-				//RGB_DataRam.Effect = 0;
-					//IAP_AP_Erase_Pages(17920,1);
-					SAVEDATA();
-        //RGB_DataRom.Effect = 0;
+
+		SAVEDATA();
     }
     RGB_SetBright(Brightness);
 }
