@@ -84,9 +84,6 @@ main( )
 	
 	Timer1_Init(8);									// 4us
 	Timer2_InputCapture_Init();
-	ADC_Init();
-
-	But_Count = 6 + RGB_DataRam.Effect;
 
     if(!RGB_DataRam.Speed)
         RGB_DataRam.Speed = 12;
