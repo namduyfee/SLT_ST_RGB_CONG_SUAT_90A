@@ -82,7 +82,6 @@ main( )
 			 
 	Timer0_Init(8);								//50us
 	
-	Timer1_Init(8);									// 4us
 	Timer2_InputCapture_Init();
 
     if(!RGB_DataRam.Speed)

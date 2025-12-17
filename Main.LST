@@ -1,4 +1,4 @@
-C51 COMPILER V9.01   MAIN                                                                  12/17/2025 17:06:35 PAGE 1   
+C51 COMPILER V9.01   MAIN                                                                  12/17/2025 17:57:00 PAGE 1   
 
 
 C51 COMPILER V9.01, COMPILATION OF MODULE MAIN
@@ -62,7 +62,7 @@ line level    source
   51          
   52          uint32_t xdata i,j,Tongle_Led =0;
   53          uint8_t idata Flag_IR_Convert, Flag_Speed_Effect, Display_Effect, Run_Effect_Done;
-C51 COMPILER V9.01   MAIN                                                                  12/17/2025 17:06:35 PAGE 2   
+C51 COMPILER V9.01   MAIN                                                                  12/17/2025 17:57:00 PAGE 2   
 
   54          uint32_t xdata IR_Data = 0;
   55          uint8_t xdata dB_Data;
@@ -95,170 +95,169 @@ line level    source
   82   1                               
   83   1              Timer0_Init(8);                                                         //50us
   84   1              
-  85   1              Timer1_Init(8);                                                                 // 4us
-  86   1              Timer2_InputCapture_Init();
-  87   1      
-  88   1          if(!RGB_DataRam.Speed)
-  89   1              RGB_DataRam.Speed = 12;
-  90   1          RGB_SetSpeed(RGB_DataRam.Speed);
-  91   1      
-  92   1              EA = 1; // enable interrup
-  93   1      
-  94   1              color_disp = RGB_GREEN;
-  95   1              RGB_DataRam.Effect = 0;
-  96   1              RGB_SetColor(color_disp, (BRIGHTNESSRam&0x00FF));
-  97   1              RGB_OnDisplay();
-  98   1              
-  99   1              while(1)
- 100   1              {
- 101   2                      CH554WDTFeed(0x00);     
- 102   2                      handler_color_button();
- 103   2                      if(color_disp_old != color_disp || brtnessold != BRIGHTNESSRam) {
- 104   3                        RGB_SetColor(color_disp, (BRIGHTNESSRam&0x00FF));
- 105   3                        color_disp_old = color_disp;
- 106   3                        brtnessold = BRIGHTNESSRam; 
- 107   3                      }               
- 108   2              }
- 109   1      }
- 110          
- 111          #define TIME_SAMLE 6
- 112          
- 113          uint32_t xdata key_color[16] = {KEY_RED, KEY_GREEN, KEY_BLUE, KEY_WHITE, KEY_ORANGE, KEY_GREEN2, KEY_BLUE2
+  85   1              Timer2_InputCapture_Init();
+  86   1      
+  87   1          if(!RGB_DataRam.Speed)
+  88   1              RGB_DataRam.Speed = 12;
+  89   1          RGB_SetSpeed(RGB_DataRam.Speed);
+  90   1      
+  91   1              EA = 1; // enable interrup
+  92   1      
+  93   1              color_disp = RGB_GREEN;
+  94   1              RGB_DataRam.Effect = 0;
+  95   1              RGB_SetColor(color_disp, (BRIGHTNESSRam&0x00FF));
+  96   1              RGB_OnDisplay();
+  97   1              
+  98   1              while(1)
+  99   1              {
+ 100   2                      CH554WDTFeed(0x00);     
+ 101   2                      handler_color_button();
+ 102   2                      if(color_disp_old != color_disp || brtnessold != BRIGHTNESSRam) {
+ 103   3                        RGB_SetColor(color_disp, (BRIGHTNESSRam&0x00FF));
+ 104   3                        color_disp_old = color_disp;
+ 105   3                        brtnessold = BRIGHTNESSRam; 
+ 106   3                      }               
+ 107   2              }
+ 108   1      }
+ 109          
+ 110          #define TIME_SAMLE 6
+ 111          
+ 112          uint32_t xdata key_color[16] = {KEY_RED, KEY_GREEN, KEY_BLUE, KEY_WHITE, KEY_ORANGE, KEY_GREEN2, KEY_BLUE2
              -, KEY_ORANGE2,
- 114                                                                          KEY_YELLOW, KEY_CYAN, KEY_PURPLE, KEY_ORANGE3, KEY_PURPLE3, KEY_PURPLE2, KEY_BLUE3, KEY_BLUE4};
-C51 COMPILER V9.01   MAIN                                                                  12/17/2025 17:06:35 PAGE 3   
+ 113                                                                          KEY_YELLOW, KEY_CYAN, KEY_PURPLE, KEY_ORANGE3, KEY_PURPLE3, KEY_PURPLE2, KEY_BLUE3, KEY_BLUE4};
+ 114          
+C51 COMPILER V9.01   MAIN                                                                  12/17/2025 17:57:00 PAGE 3   
 
- 115          
- 116          uint32_t xdata key_colorMH[16] = {KEY_RED_MH, KEY_GREEN_MH, KEY_BLUE_MH, KEY_WHITE_MH, KEY_ORANGE_MH, KEY_
+ 115          uint32_t xdata key_colorMH[16] = {KEY_RED_MH, KEY_GREEN_MH, KEY_BLUE_MH, KEY_WHITE_MH, KEY_ORANGE_MH, KEY_
              -GREEN2_MH, KEY_BLUE2_MH, KEY_ORANGE2_MH,
- 117                                                                          KEY_YELLOW_MH, KEY_CYAN_MH, KEY_PURPLE_MH, KEY_ORANGE3_MH, KEY_PURPLE3_MH, KEY_PURPLE2_MH, KEY_BLU
+ 116                                                                          KEY_YELLOW_MH, KEY_CYAN_MH, KEY_PURPLE_MH, KEY_ORANGE3_MH, KEY_PURPLE3_MH, KEY_PURPLE2_MH, KEY_BLU
              -E3_MH, KEY_BLUE4_MH};
- 118          
- 119          uint32_t color[16] = {RGB_RED, RGB_GREEN, RGB_BLUE, RGB_WHITE, RGB_ORANGE, RGB_GREEN2, RGB_BLUE2, RGB_ORAN
+ 117          
+ 118          uint32_t color[16] = {RGB_RED, RGB_GREEN, RGB_BLUE, RGB_WHITE, RGB_ORANGE, RGB_GREEN2, RGB_BLUE2, RGB_ORAN
              -GE2, 
- 120                                                  RGB_YELLOW, RGB_CYAN, RGB_PURPLE, RGB_ORANGE3, RGB_PURPLE3, RGB_PURPLE2, RGB_BLUE3, RGB_BLUE4};
- 121          uint32_t stat_but_dd = 0, stat_but_music = 0, stat_but_sp = 0;
- 122          
- 123          void handler_color_button(void) 
- 124          {
- 125   1              uint8_t tm_cnt = 0;
- 126   1      
- 127   1              uint8_t i;
- 128   1              /* sample button avoid noise (TIME_SAMLE * 1ms) */
- 129   1              mDelaymS(1);
- 130   1              if(BUT_DON_DA == 0) {
- 131   2                      stat_but_dd = stat_but_dd + 1;
- 132   2              }               
- 133   1              else 
- 134   1                      stat_but_dd = 0;
- 135   1              if(BUT_MUSIC == 0) {
- 136   2                      stat_but_music = stat_but_music + 1;
- 137   2              }               
- 138   1              else 
- 139   1                      stat_but_music = 0;
- 140   1               
- 141   1              if(BUT_SPEED == 0) {
- 142   2                      stat_but_sp = stat_but_sp + 1;
- 143   2      
- 144   2              }               
- 145   1              else 
- 146   1                      stat_but_sp = 0;
- 147   1      
- 148   1                         
- 149   1              // pressed loop
- 150   1              if( (stat_but_dd >= (TIME_SAMLE) && stat_but_music < (TIME_SAMLE) && stat_but_sp < (TIME_SAMLE)) ||
- 151   1                      (stat_but_music >= (TIME_SAMLE) && stat_but_dd < (TIME_SAMLE) && stat_but_sp < (TIME_SAMLE)) ||
- 152   1                      (stat_but_sp >= (TIME_SAMLE) && stat_but_dd < (TIME_SAMLE) && stat_but_music < (TIME_SAMLE)) ) {
- 153   2      
- 154   2                      if(start_select_color == 0) {
- 155   3                          Flag_IR_Convert = 0;
- 156   3                          IR_Data = 0;
- 157   3                              start_select_color = 1;
- 158   3                      }
- 159   2      
- 160   2                      if(Flag_IR_Convert) {
- 161   3                              for(i = 0; i < 16; i++) {
- 162   4                                      if(IR_Data == key_color[i] || IR_Data == key_colorMH[i]) {
- 163   5              
- 164   5                                              tm_cnt = 1;
- 165   5              
- 166   5                                              if(stat_but_dd >= TIME_SAMLE) 
- 167   5                                                      VALUE1Ram = color[i];
- 168   5                                              else if (stat_but_music >= TIME_SAMLE)
- 169   5                                                 VALUE2Ram = color[i];
- 170   5                                              else if (stat_but_sp >= TIME_SAMLE)
- 171   5                                                      VALUE3Ram = color[i];
- 172   5                              
- 173   5                                              break;
-C51 COMPILER V9.01   MAIN                                                                  12/17/2025 17:06:35 PAGE 4   
+ 119                                                  RGB_YELLOW, RGB_CYAN, RGB_PURPLE, RGB_ORANGE3, RGB_PURPLE3, RGB_PURPLE2, RGB_BLUE3, RGB_BLUE4};
+ 120          uint32_t stat_but_dd = 0, stat_but_music = 0, stat_but_sp = 0;
+ 121          
+ 122          void handler_color_button(void) 
+ 123          {
+ 124   1              uint8_t tm_cnt = 0;
+ 125   1      
+ 126   1              uint8_t i;
+ 127   1              /* sample button avoid noise (TIME_SAMLE * 1ms) */
+ 128   1              mDelaymS(1);
+ 129   1              if(BUT_DON_DA == 0) {
+ 130   2                      stat_but_dd = stat_but_dd + 1;
+ 131   2              }               
+ 132   1              else 
+ 133   1                      stat_but_dd = 0;
+ 134   1              if(BUT_MUSIC == 0) {
+ 135   2                      stat_but_music = stat_but_music + 1;
+ 136   2              }               
+ 137   1              else 
+ 138   1                      stat_but_music = 0;
+ 139   1               
+ 140   1              if(BUT_SPEED == 0) {
+ 141   2                      stat_but_sp = stat_but_sp + 1;
+ 142   2      
+ 143   2              }               
+ 144   1              else 
+ 145   1                      stat_but_sp = 0;
+ 146   1      
+ 147   1                         
+ 148   1              // pressed loop
+ 149   1              if( (stat_but_dd >= (TIME_SAMLE) && stat_but_music < (TIME_SAMLE) && stat_but_sp < (TIME_SAMLE)) ||
+ 150   1                      (stat_but_music >= (TIME_SAMLE) && stat_but_dd < (TIME_SAMLE) && stat_but_sp < (TIME_SAMLE)) ||
+ 151   1                      (stat_but_sp >= (TIME_SAMLE) && stat_but_dd < (TIME_SAMLE) && stat_but_music < (TIME_SAMLE)) ) {
+ 152   2      
+ 153   2                      if(start_select_color == 0) {
+ 154   3                          Flag_IR_Convert = 0;
+ 155   3                          IR_Data = 0;
+ 156   3                              start_select_color = 1;
+ 157   3                      }
+ 158   2      
+ 159   2                      if(Flag_IR_Convert) {
+ 160   3                              for(i = 0; i < 16; i++) {
+ 161   4                                      if(IR_Data == key_color[i] || IR_Data == key_colorMH[i]) {
+ 162   5              
+ 163   5                                              tm_cnt = 1;
+ 164   5              
+ 165   5                                              if(stat_but_dd >= TIME_SAMLE) 
+ 166   5                                                      VALUE1Ram = color[i];
+ 167   5                                              else if (stat_but_music >= TIME_SAMLE)
+ 168   5                                                 VALUE2Ram = color[i];
+ 169   5                                              else if (stat_but_sp >= TIME_SAMLE)
+ 170   5                                                      VALUE3Ram = color[i];
+ 171   5                              
+ 172   5                                              break;
+ 173   5              
+C51 COMPILER V9.01   MAIN                                                                  12/17/2025 17:57:00 PAGE 4   
 
- 174   5              
- 175   5                                      }
- 176   4                              }
- 177   3                              if(tm_cnt != 0) {
- 178   4                                      start_select_color = 0;
- 179   4                                      stat_but_dd = 0;
- 180   4                                      stat_but_music = 0;
- 181   4                                      stat_but_sp = 0;
- 182   4                              }
- 183   3      
- 184   3                              if( (IR_Data == KEY_UP_MH)||(IR_Data==KEY_UP) ) {
- 185   4                                 if(BRIGHTNESSRam < MAX_BRIGHTNESS)
- 186   4                                              BRIGHTNESSRam++;
- 187   4                              }
- 188   3                              else if( (IR_Data == KEY_DOWN_MH)||(IR_Data==KEY_DOWN) ) {
- 189   4                                 if(BRIGHTNESSRam > 0)
- 190   4                                              BRIGHTNESSRam--;
- 191   4                              }
- 192   3      
- 193   3                              Flag_IR_Convert = 0;
- 194   3                          IR_Data = 0;
- 195   3      
- 196   3                      }
- 197   2      
- 198   2                      if(stat_but_dd >= (TIME_SAMLE)) {
- 199   3                         color_disp = VALUE1Ram;
- 200   3                         RGB_DataRam.Effect = 0;
- 201   3                      }
- 202   2                      else if (stat_but_music >= (TIME_SAMLE)) {
- 203   3                              color_disp = VALUE2Ram;
- 204   3                              RGB_DataRam.Effect = 0;
- 205   3                      }
- 206   2                      else if (stat_but_sp >= (TIME_SAMLE)) {
- 207   3                              color_disp = VALUE3Ram;
- 208   3                              RGB_DataRam.Effect = 0;
- 209   3                      }
- 210   2              }       
- 211   1              else {
- 212   2                      start_select_color = 0;   /* if press button but not press key before release the button then start_sele
+ 174   5                                      }
+ 175   4                              }
+ 176   3                              if(tm_cnt != 0) {
+ 177   4                                      start_select_color = 0;
+ 178   4                                      stat_but_dd = 0;
+ 179   4                                      stat_but_music = 0;
+ 180   4                                      stat_but_sp = 0;
+ 181   4                              }
+ 182   3      
+ 183   3                              if( (IR_Data == KEY_UP_MH)||(IR_Data==KEY_UP) ) {
+ 184   4                                 if(BRIGHTNESSRam < MAX_BRIGHTNESS)
+ 185   4                                              BRIGHTNESSRam++;
+ 186   4                              }
+ 187   3                              else if( (IR_Data == KEY_DOWN_MH)||(IR_Data==KEY_DOWN) ) {
+ 188   4                                 if(BRIGHTNESSRam > 0)
+ 189   4                                              BRIGHTNESSRam--;
+ 190   4                              }
+ 191   3      
+ 192   3                              Flag_IR_Convert = 0;
+ 193   3                          IR_Data = 0;
+ 194   3      
+ 195   3                      }
+ 196   2      
+ 197   2                      if(stat_but_dd >= (TIME_SAMLE)) {
+ 198   3                         color_disp = VALUE1Ram;
+ 199   3                         RGB_DataRam.Effect = 0;
+ 200   3                      }
+ 201   2                      else if (stat_but_music >= (TIME_SAMLE)) {
+ 202   3                              color_disp = VALUE2Ram;
+ 203   3                              RGB_DataRam.Effect = 0;
+ 204   3                      }
+ 205   2                      else if (stat_but_sp >= (TIME_SAMLE)) {
+ 206   3                              color_disp = VALUE3Ram;
+ 207   3                              RGB_DataRam.Effect = 0;
+ 208   3                      }
+ 209   2              }       
+ 210   1              else {
+ 211   2                      start_select_color = 0;   /* if press button but not press key before release the button then start_sele
              -ct_color not reset to 0 in pressed loop*/
- 213   2                      if(Flag_IR_Convert)
- 214   2                      {
- 215   3      
- 216   3                              if( (IR_Data == KEY_UP_MH)||(IR_Data==KEY_UP) ) {
- 217   4                                 if(BRIGHTNESSRam < MAX_BRIGHTNESS)
- 218   4                                              BRIGHTNESSRam++;
- 219   4                              }
- 220   3                              else if( (IR_Data == KEY_DOWN_MH)||(IR_Data==KEY_DOWN) ) {
- 221   4                                 if(BRIGHTNESSRam > 0)
- 222   4                                              BRIGHTNESSRam--;
- 223   4                              }
- 224   3      
- 225   3                          Flag_IR_Convert = 0;
- 226   3                          IR_Data = 0;
- 227   3                      }               
- 228   2              }       
- 229   1              if(tm_cnt != 0)
- 230   1                      SAVEDATA();
- 231   1      }
+ 212   2                      if(Flag_IR_Convert)
+ 213   2                      {
+ 214   3      
+ 215   3                              if( (IR_Data == KEY_UP_MH)||(IR_Data==KEY_UP) ) {
+ 216   4                                 if(BRIGHTNESSRam < MAX_BRIGHTNESS)
+ 217   4                                              BRIGHTNESSRam++;
+ 218   4                              }
+ 219   3                              else if( (IR_Data == KEY_DOWN_MH)||(IR_Data==KEY_DOWN) ) {
+ 220   4                                 if(BRIGHTNESSRam > 0)
+ 221   4                                              BRIGHTNESSRam--;
+ 222   4                              }
+ 223   3      
+ 224   3                          Flag_IR_Convert = 0;
+ 225   3                          IR_Data = 0;
+ 226   3                      }               
+ 227   2              }       
+ 228   1              if(tm_cnt != 0)
+ 229   1                      SAVEDATA();
+ 230   1      }
+ 231          
  232          
- 233          
 
-C51 COMPILER V9.01   MAIN                                                                  12/17/2025 17:06:35 PAGE 5   
 
+C51 COMPILER V9.01   MAIN                                                                  12/17/2025 17:57:00 PAGE 5   
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =   1177    ----
+   CODE SIZE        =   1170    ----
    CONSTANT SIZE    =     14    ----
    XDATA SIZE       =    260       2
    PDATA SIZE       =   ----    ----
