@@ -1,1 +1,1 @@
-"Project\Source\Savedata.c" LARGE OMF2 ROM(COMPACT) OPTIMIZE (SIZE) BROWSE NOAREGS INCDIR(.\Project\include) DEBUG PRINT(.\Savedata.lst) OBJECT(Savedata.obj)
+"Project\Source\Savedata.c" LARGE ROM(COMPACT) OPTIMIZE (SIZE) BROWSE NOAREGS INCDIR(.\Project\include) DEBUG OBJECTEXTEND PRINT(.\Savedata.lst) OBJECT(Savedata.obj)

@@ -39,11 +39,14 @@ void handler_color_button(void);
 uint32_t color_disp;
 uint32_t color_disp_old = 0;
 uint8_t start_select_color = 0;
+UINT16 brtnessold = 0; 
 
 const UINT32 code  VALUE1 = 0xff0000, VALUE2 = 0x00ff00, VALUE3 = 0x0000ff;
-
+const UINT16 code BRTNESS = 0x000f;
 UINT32 VALUE1Ram,VALUE2Ram,VALUE3Ram;
 
+
+UINT16 BRIGHTNESSRam = 15; 
 //
 
 uint32_t xdata i,j,Tongle_Led =0;
@@ -74,7 +77,7 @@ main( )
 	CH554WDTModeSelect(1);
 	CH554WDTFeed(0x00);
 
-	RGB_PinInit();
+//	RGB_PinInit();
 	LOADSAVEDATA(); // load gia tri luu trong APROM
 	mDelaymS(10);
 		 
@@ -99,16 +102,21 @@ main( )
 
 	color_disp = RGB_GREEN;
 	RGB_DataRam.Effect = 0;
-	RGB_OnDisplay();
+	
+//	RGB_SetColor(color_disp, (UINT8)BRIGHTNESSRam);
+
+	
 
 	while(1)
 	{
 		CH554WDTFeed(0x00);	
 
 		handler_color_button();
-		if(color_disp_old != color_disp) {
-		  RGB_SetColor(color_disp, MAX_BRIGHTNESS/2);
+		if(color_disp_old != color_disp || brtnessold != BRIGHTNESSRam) {
+		  RGB_SetColor(color_disp, (UINT8)BRIGHTNESSRam);
+		  RGB_OnDisplay();
 		  color_disp_old = color_disp;
+		  brtnessold = BRIGHTNESSRam; 
 		}		
 	}
 }
@@ -179,12 +187,25 @@ void handler_color_button(void)
 	
 				}
 			}
+			if(tm_cnt != 0) {
+				start_select_color = 0;
+				stat_but_dd = 0;
+				stat_but_music = 0;
+				stat_but_sp = 0;
+			}
+
+			if( (IR_Data == KEY_UP_MH)||(IR_Data==KEY_UP) ) {
+			   if(BRIGHTNESSRam < MAX_BRIGHTNESS)
+			   		BRIGHTNESSRam++;
+			}
+			else if( (IR_Data == KEY_DOWN_MH)||(IR_Data==KEY_DOWN) ) {
+			   if(BRIGHTNESSRam > 0)
+			   		BRIGHTNESSRam--;
+			}
+
 			Flag_IR_Convert = 0;
 		    IR_Data = 0;
-			start_select_color = 0;
-			stat_but_dd = 0;
-			stat_but_music = 0;
-			stat_but_sp = 0;
+
 		}
 
 		if(stat_but_dd >= (TIME_SAMLE)) {
@@ -204,6 +225,16 @@ void handler_color_button(void)
 		start_select_color = 0;	  /* if press button but not press key before release the button then start_select_color not reset to 0 in pressed loop*/
 		if(Flag_IR_Convert)
 		{
+
+			if( (IR_Data == KEY_UP_MH)||(IR_Data==KEY_UP) ) {
+			   if(BRIGHTNESSRam < MAX_BRIGHTNESS)
+			   		BRIGHTNESSRam++;
+			}
+			else if( (IR_Data == KEY_DOWN_MH)||(IR_Data==KEY_DOWN) ) {
+			   if(BRIGHTNESSRam > 0)
+			   		BRIGHTNESSRam--;
+			}
+
 		    Flag_IR_Convert = 0;
 		    IR_Data = 0;
 		}	 	

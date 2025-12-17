@@ -175,7 +175,7 @@
       <GroupNumber>1</GroupNumber>
       <FileNumber>1</FileNumber>
       <FileType>1</FileType>
-      <tvExp>0</tvExp>
+      <tvExp>1</tvExp>
       <Focus>0</Focus>
       <ColumnNumber>5</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -191,10 +191,10 @@
       <FileType>1</FileType>
       <tvExp>1</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>9</ColumnNumber>
+      <ColumnNumber>44</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>51</TopLine>
-      <CurrentLine>73</CurrentLine>
+      <TopLine>25</TopLine>
+      <CurrentLine>41</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\Main.C</PathWithFileName>
       <FilenameWithoutPath>Main.C</FilenameWithoutPath>
@@ -226,10 +226,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>149</ColumnNumber>
+      <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>90</TopLine>
-      <CurrentLine>114</CurrentLine>
+      <TopLine>66</TopLine>
+      <CurrentLine>66</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\Project\Source\Effect.c</PathWithFileName>
       <FilenameWithoutPath>Effect.c</FilenameWithoutPath>
@@ -240,10 +240,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>19</ColumnNumber>
+      <ColumnNumber>5</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>1</TopLine>
-      <CurrentLine>11</CurrentLine>
+      <CurrentLine>8</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\Project\Source\Savedata.c</PathWithFileName>
       <FilenameWithoutPath>Savedata.c</FilenameWithoutPath>
@@ -254,10 +254,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>68</ColumnNumber>
+      <ColumnNumber>43</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>21</TopLine>
-      <CurrentLine>55</CurrentLine>
+      <TopLine>1</TopLine>
+      <CurrentLine>6</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\Project\Source\WriteFlashROM.c</PathWithFileName>
       <FilenameWithoutPath>WriteFlashROM.c</FilenameWithoutPath>
@@ -372,8 +372,34 @@
 
   <AlienFiles>
     <PathWithFilename>E:\ProjectNam\test\RGB_RemoteTuhu_CH552_IAP_10.06.2024\PROJECT\INCLUDE\EFFECT.H</PathWithFilename>
-    <TopLine>119</TopLine>
-    <CurrentLine>143</CurrentLine>
+    <TopLine>104</TopLine>
+    <CurrentLine>104</CurrentLine>
+    <Constant>0</Constant>
+    <WindowPosition>
+      <length>0</length>
+      <flags>0</flags>
+      <showCmd>0</showCmd>
+      <MinPosition>
+        <xPos>0</xPos>
+        <yPos>0</yPos>
+      </MinPosition>
+      <MaxPosition>
+        <xPos>0</xPos>
+        <yPos>0</yPos>
+      </MaxPosition>
+      <NormalPosition>
+        <Top>0</Top>
+        <Left>0</Left>
+        <Right>0</Right>
+        <Bottom>0</Bottom>
+      </NormalPosition>
+    </WindowPosition>
+  </AlienFiles>
+
+  <AlienFiles>
+    <PathWithFilename>E:\ProjectNam\test\RGB_RemoteTuhu_CH552_IAP_10.06.2024\ch554_txm.M51</PathWithFilename>
+    <TopLine>1</TopLine>
+    <CurrentLine>1</CurrentLine>
     <Constant>0</Constant>
     <WindowPosition>
       <length>0</length>
@@ -1737,19 +1763,19 @@
     <ActiveMDIGroup>0</ActiveMDIGroup>
     <MDIGroup>
       <Size>100</Size>
-      <ActiveTab>1</ActiveTab>
+      <ActiveTab>0</ActiveTab>
       <Documents>
         <Doc>
           <Name>.\Main.C</Name>
-          <ColumnNumber>8</ColumnNumber>
-          <TopLine>69</TopLine>
-          <CurrentLine>76</CurrentLine>
+          <ColumnNumber>44</ColumnNumber>
+          <TopLine>25</TopLine>
+          <CurrentLine>41</CurrentLine>
         </Doc>
         <Doc>
           <Name>.\PROJECT\INCLUDE\EFFECT.H</Name>
-          <ColumnNumber>9</ColumnNumber>
-          <TopLine>119</TopLine>
-          <CurrentLine>143</CurrentLine>
+          <ColumnNumber>24</ColumnNumber>
+          <TopLine>104</TopLine>
+          <CurrentLine>104</CurrentLine>
         </Doc>
         <Doc>
           <Name>.\Project\Source\Effect_RGBDance.c</Name>
@@ -1759,9 +1785,9 @@
         </Doc>
         <Doc>
           <Name>.\Project\Source\Effect.c</Name>
-          <ColumnNumber>149</ColumnNumber>
-          <TopLine>90</TopLine>
-          <CurrentLine>114</CurrentLine>
+          <ColumnNumber>0</ColumnNumber>
+          <TopLine>66</TopLine>
+          <CurrentLine>66</CurrentLine>
         </Doc>
         <Doc>
           <Name>.\Debug.C</Name>
@@ -1783,9 +1809,9 @@
         </Doc>
         <Doc>
           <Name>.\Project\Source\Savedata.c</Name>
-          <ColumnNumber>24</ColumnNumber>
+          <ColumnNumber>5</ColumnNumber>
           <TopLine>1</TopLine>
-          <CurrentLine>16</CurrentLine>
+          <CurrentLine>8</CurrentLine>
         </Doc>
         <Doc>
           <Name>.\PROJECT\INCLUDE\SAVEDATA.H</Name>
@@ -1795,15 +1821,21 @@
         </Doc>
         <Doc>
           <Name>.\Project\Source\WriteFlashROM.c</Name>
-          <ColumnNumber>68</ColumnNumber>
-          <TopLine>21</TopLine>
-          <CurrentLine>55</CurrentLine>
+          <ColumnNumber>43</ColumnNumber>
+          <TopLine>1</TopLine>
+          <CurrentLine>6</CurrentLine>
         </Doc>
         <Doc>
           <Name>CH554.H</Name>
           <ColumnNumber>90</ColumnNumber>
           <TopLine>164</TopLine>
           <CurrentLine>201</CurrentLine>
+        </Doc>
+        <Doc>
+          <Name>E:\ProjectNam\test\RGB_RemoteTuhu_CH552_IAP_10.06.2024\ch554_txm.M51</Name>
+          <ColumnNumber>0</ColumnNumber>
+          <TopLine>1</TopLine>
+          <CurrentLine>1</CurrentLine>
         </Doc>
       </Documents>
     </MDIGroup>

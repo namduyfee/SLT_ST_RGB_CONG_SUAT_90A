@@ -1,10 +1,10 @@
-C51 COMPILER V9.01   DEBUG                                                                 12/15/2025 08:47:27 PAGE 1   
+C51 COMPILER V9.01   DEBUG                                                                 12/17/2025 12:02:12 PAGE 1   
 
 
 C51 COMPILER V9.01, COMPILATION OF MODULE DEBUG
 OBJECT MODULE PLACED IN Debug.OBJ
-COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Debug.C LARGE OMF2 ROM(COMPACT) OPTIMIZE(SIZE) BROWSE NOAREGS INCDIR(.\Proj
-                    -ect\include) DEBUG
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Debug.C LARGE ROM(COMPACT) OPTIMIZE(SIZE) BROWSE NOAREGS INCDIR(.\Project\i
+                    -nclude) DEBUG OBJECTEXTEND
 
 line level    source
 
@@ -62,7 +62,7 @@ line level    source
   52          
   53          /*******************************************************************************
   54          * Function Name  : mDelayus(UNIT16 n)
-C51 COMPILER V9.01   DEBUG                                                                 12/15/2025 08:47:27 PAGE 2   
+C51 COMPILER V9.01   DEBUG                                                                 12/17/2025 12:02:12 PAGE 2   
 
   55          * Description    : us延时函数
   56          * Input          : UNIT16 n
@@ -126,7 +126,7 @@ line level    source
  114          * Input          : UNIT16 n
  115          * Output         : None
  116          * Return         : None
-C51 COMPILER V9.01   DEBUG                                                                 12/15/2025 08:47:27 PAGE 3   
+C51 COMPILER V9.01   DEBUG                                                                 12/17/2025 12:02:12 PAGE 3   
 
  117          *******************************************************************************/
  118          void    mDelaymS( UINT16 n )                                                  // 以mS为单位延时
@@ -190,7 +190,7 @@ line level    source
  176          /*******************************************************************************
  177          * Function Name  : CH554UART0RcvByte()
  178          * Description    : CH554UART0接收一个字节
-C51 COMPILER V9.01   DEBUG                                                                 12/15/2025 08:47:27 PAGE 4   
+C51 COMPILER V9.01   DEBUG                                                                 12/17/2025 12:02:12 PAGE 4   
 
  179          * Input          : None
  180          * Output         : None
@@ -254,7 +254,7 @@ line level    source
  235          * Function Name  : CH554UART1SendByte(UINT8 SendDat)
  236          * Description    : CH554UART1发送一个字节
  237          * Input          : UINT8 SendDat；要发送的数据
-C51 COMPILER V9.01   DEBUG                                                                 12/15/2025 08:47:27 PAGE 5   
+C51 COMPILER V9.01   DEBUG                                                                 12/17/2025 12:02:12 PAGE 5   
 
  238          * Output         : None
  239          * Return         : None
@@ -311,10 +311,6 @@ MODULE INFORMATION:   STATIC OVERLAYABLE
    DATA SIZE        =   ----    ----
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----
-   EDATA SIZE       =   ----    ----
-   HDATA SIZE       =   ----    ----
-   XDATA CONST SIZE =   ----    ----
-   FAR CONST SIZE   =   ----    ----
 END OF MODULE INFORMATION.
 
 

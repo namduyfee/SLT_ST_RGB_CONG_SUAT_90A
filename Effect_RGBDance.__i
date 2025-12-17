@@ -1,1 +1,0 @@
-"Project\Source\Effect_RGBDance.c" LARGE OMF2 ROM(COMPACT) OPTIMIZE (SIZE) BROWSE NOAREGS INCDIR(.\Project\include) DEBUG PRINT(.\Effect_RGBDance.lst) OBJECT(Effect_RGBDance.obj)

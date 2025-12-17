@@ -7,4 +7,4 @@
 "ADC.obj",
 "Effect_RGBDance.obj" 
 TO "ch554_txm" 
-
+RAMSIZE(256) 
