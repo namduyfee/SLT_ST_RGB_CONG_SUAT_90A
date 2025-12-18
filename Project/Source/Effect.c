@@ -102,11 +102,6 @@ void RGB_SetColor(uint32_t Color, uint8_t Brightness)
     RGB_DataRam.Color.DutyRed = (uint8_t)(Color>>16);
     RGB_DataRam.Color.DutyGreen = (uint8_t)(Color>>8);
     RGB_DataRam.Color.DutyBlue = (uint8_t)(Color);
-    if(RGB_DataRam.Effect == 0)
-    {
-
-		SAVEDATA();
-    }
     RGB_SetBright(Brightness);
 }
 void SetColor(uint8_t color, uint8_t duty, uint8_t bright)

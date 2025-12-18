@@ -137,7 +137,7 @@
         <Bp>
           <Number>1</Number>
           <Type>0</Type>
-          <LineNumber>100</LineNumber>
+          <LineNumber>58</LineNumber>
           <EnabledFlag>1</EnabledFlag>
           <Address>0</Address>
           <ByteObject>0</ByteObject>
@@ -152,21 +152,6 @@
         <Bp>
           <Number>2</Number>
           <Type>0</Type>
-          <LineNumber>58</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>0</Address>
-          <ByteObject>0</ByteObject>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>0</BreakIfRCount>
-          <Filename>Main.C</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression></Expression>
-        </Bp>
-        <Bp>
-          <Number>3</Number>
-          <Type>0</Type>
           <LineNumber>231</LineNumber>
           <EnabledFlag>1</EnabledFlag>
           <Address>0</Address>
@@ -180,7 +165,7 @@
           <Expression></Expression>
         </Bp>
         <Bp>
-          <Number>4</Number>
+          <Number>3</Number>
           <Type>0</Type>
           <LineNumber>185</LineNumber>
           <EnabledFlag>1</EnabledFlag>
@@ -251,10 +236,10 @@
       <FileType>1</FileType>
       <tvExp>1</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>42</ColumnNumber>
+      <ColumnNumber>25</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>68</TopLine>
-      <CurrentLine>91</CurrentLine>
+      <TopLine>81</TopLine>
+      <CurrentLine>104</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\Main.C</PathWithFileName>
       <FilenameWithoutPath>Main.C</FilenameWithoutPath>
@@ -272,10 +257,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>22</ColumnNumber>
+      <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>75</TopLine>
-      <CurrentLine>92</CurrentLine>
+      <TopLine>81</TopLine>
+      <CurrentLine>99</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\Project\Source\Timer0.c</PathWithFileName>
       <FilenameWithoutPath>Timer0.c</FilenameWithoutPath>
@@ -286,10 +271,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>54</ColumnNumber>
+      <ColumnNumber>21</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>1</TopLine>
-      <CurrentLine>28</CurrentLine>
+      <TopLine>85</TopLine>
+      <CurrentLine>92</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\Project\Source\Effect.c</PathWithFileName>
       <FilenameWithoutPath>Effect.c</FilenameWithoutPath>
@@ -353,9 +338,35 @@
   </Group>
 
   <AlienFiles>
+    <PathWithFilename>E:\ProjectNam\SLT_RGB\PROJECT\INCLUDE\TIMER0.H</PathWithFilename>
+    <TopLine>1</TopLine>
+    <CurrentLine>15</CurrentLine>
+    <Constant>0</Constant>
+    <WindowPosition>
+      <length>0</length>
+      <flags>0</flags>
+      <showCmd>0</showCmd>
+      <MinPosition>
+        <xPos>0</xPos>
+        <yPos>0</yPos>
+      </MinPosition>
+      <MaxPosition>
+        <xPos>0</xPos>
+        <yPos>0</yPos>
+      </MaxPosition>
+      <NormalPosition>
+        <Top>0</Top>
+        <Left>0</Left>
+        <Right>0</Right>
+        <Bottom>0</Bottom>
+      </NormalPosition>
+    </WindowPosition>
+  </AlienFiles>
+
+  <AlienFiles>
     <PathWithFilename>E:\ProjectNam\SLT_RGB\CH554.H</PathWithFilename>
-    <TopLine>238</TopLine>
-    <CurrentLine>244</CurrentLine>
+    <TopLine>377</TopLine>
+    <CurrentLine>383</CurrentLine>
     <Constant>0</Constant>
     <WindowPosition>
       <length>0</length>
@@ -434,32 +445,6 @@
     <PathWithFilename>E:\ProjectNam\SLT_RGB\PROJECT\INCLUDE\EFFECT.H</PathWithFilename>
     <TopLine>68</TopLine>
     <CurrentLine>71</CurrentLine>
-    <Constant>0</Constant>
-    <WindowPosition>
-      <length>0</length>
-      <flags>0</flags>
-      <showCmd>0</showCmd>
-      <MinPosition>
-        <xPos>0</xPos>
-        <yPos>0</yPos>
-      </MinPosition>
-      <MaxPosition>
-        <xPos>0</xPos>
-        <yPos>0</yPos>
-      </MaxPosition>
-      <NormalPosition>
-        <Top>0</Top>
-        <Left>0</Left>
-        <Right>0</Right>
-        <Bottom>0</Bottom>
-      </NormalPosition>
-    </WindowPosition>
-  </AlienFiles>
-
-  <AlienFiles>
-    <PathWithFilename>E:\ProjectNam\SLT_RGB\PROJECT\INCLUDE\TIMER0.H</PathWithFilename>
-    <TopLine>1</TopLine>
-    <CurrentLine>15</CurrentLine>
     <Constant>0</Constant>
     <WindowPosition>
       <length>0</length>
@@ -1823,13 +1808,13 @@
     <ActiveMDIGroup>0</ActiveMDIGroup>
     <MDIGroup>
       <Size>100</Size>
-      <ActiveTab>6</ActiveTab>
+      <ActiveTab>3</ActiveTab>
       <Documents>
         <Doc>
           <Name>.\Main.C</Name>
-          <ColumnNumber>42</ColumnNumber>
-          <TopLine>68</TopLine>
-          <CurrentLine>91</CurrentLine>
+          <ColumnNumber>25</ColumnNumber>
+          <TopLine>81</TopLine>
+          <CurrentLine>104</CurrentLine>
         </Doc>
         <Doc>
           <Name>.\PROJECT\INCLUDE\EFFECT.H</Name>
@@ -1845,9 +1830,9 @@
         </Doc>
         <Doc>
           <Name>.\Project\Source\Effect.c</Name>
-          <ColumnNumber>54</ColumnNumber>
-          <TopLine>1</TopLine>
-          <CurrentLine>28</CurrentLine>
+          <ColumnNumber>21</ColumnNumber>
+          <TopLine>85</TopLine>
+          <CurrentLine>92</CurrentLine>
         </Doc>
         <Doc>
           <Name>.\Debug.C</Name>
@@ -1863,9 +1848,9 @@
         </Doc>
         <Doc>
           <Name>.\Project\Source\Timer0.c</Name>
-          <ColumnNumber>22</ColumnNumber>
-          <TopLine>75</TopLine>
-          <CurrentLine>92</CurrentLine>
+          <ColumnNumber>0</ColumnNumber>
+          <TopLine>81</TopLine>
+          <CurrentLine>99</CurrentLine>
         </Doc>
         <Doc>
           <Name>.\Project\Source\Savedata.c</Name>
@@ -1887,9 +1872,9 @@
         </Doc>
         <Doc>
           <Name>CH554.H</Name>
-          <ColumnNumber>6</ColumnNumber>
-          <TopLine>238</TopLine>
-          <CurrentLine>244</CurrentLine>
+          <ColumnNumber>4</ColumnNumber>
+          <TopLine>377</TopLine>
+          <CurrentLine>383</CurrentLine>
         </Doc>
         <Doc>
           <Name>.\Project\Source\ADC.c</Name>

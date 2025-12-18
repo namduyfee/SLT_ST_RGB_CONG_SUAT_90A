@@ -1,4 +1,4 @@
-C51 COMPILER V9.01   MAIN                                                                  12/17/2025 17:57:00 PAGE 1   
+C51 COMPILER V9.01   MAIN                                                                  12/17/2025 17:59:52 PAGE 1   
 
 
 C51 COMPILER V9.01, COMPILATION OF MODULE MAIN
@@ -62,7 +62,7 @@ line level    source
   51          
   52          uint32_t xdata i,j,Tongle_Led =0;
   53          uint8_t idata Flag_IR_Convert, Flag_Speed_Effect, Display_Effect, Run_Effect_Done;
-C51 COMPILER V9.01   MAIN                                                                  12/17/2025 17:57:00 PAGE 2   
+C51 COMPILER V9.01   MAIN                                                                  12/17/2025 17:59:52 PAGE 2   
 
   54          uint32_t xdata IR_Data = 0;
   55          uint8_t xdata dB_Data;
@@ -126,7 +126,7 @@ line level    source
              -, KEY_ORANGE2,
  113                                                                          KEY_YELLOW, KEY_CYAN, KEY_PURPLE, KEY_ORANGE3, KEY_PURPLE3, KEY_PURPLE2, KEY_BLUE3, KEY_BLUE4};
  114          
-C51 COMPILER V9.01   MAIN                                                                  12/17/2025 17:57:00 PAGE 3   
+C51 COMPILER V9.01   MAIN                                                                  12/17/2025 17:59:52 PAGE 3   
 
  115          uint32_t xdata key_colorMH[16] = {KEY_RED_MH, KEY_GREEN_MH, KEY_BLUE_MH, KEY_WHITE_MH, KEY_ORANGE_MH, KEY_
              -GREEN2_MH, KEY_BLUE2_MH, KEY_ORANGE2_MH,
@@ -190,7 +190,7 @@ line level    source
  171   5                              
  172   5                                              break;
  173   5              
-C51 COMPILER V9.01   MAIN                                                                  12/17/2025 17:57:00 PAGE 4   
+C51 COMPILER V9.01   MAIN                                                                  12/17/2025 17:59:52 PAGE 4   
 
  174   5                                      }
  175   4                              }
@@ -254,7 +254,7 @@ line level    source
  232          
 
 
-C51 COMPILER V9.01   MAIN                                                                  12/17/2025 17:57:00 PAGE 5   
+C51 COMPILER V9.01   MAIN                                                                  12/17/2025 17:59:52 PAGE 5   
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
    CODE SIZE        =   1170    ----
