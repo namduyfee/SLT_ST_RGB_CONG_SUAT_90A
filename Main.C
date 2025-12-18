@@ -225,8 +225,10 @@ void handler_color_button(void)
 		    IR_Data = 0;
 		}	 	
 	}	
-	if(tm_cnt != 0)
+	if(tm_cnt != 0) {
 		SAVEDATA();
+		mDelaymS(1);
+	}
 }
 
 
