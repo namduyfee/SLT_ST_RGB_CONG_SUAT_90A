@@ -273,7 +273,7 @@
       <Focus>0</Focus>
       <ColumnNumber>21</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>85</TopLine>
+      <TopLine>73</TopLine>
       <CurrentLine>92</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\Project\Source\Effect.c</PathWithFileName>
@@ -1831,7 +1831,7 @@
         <Doc>
           <Name>.\Project\Source\Effect.c</Name>
           <ColumnNumber>21</ColumnNumber>
-          <TopLine>85</TopLine>
+          <TopLine>73</TopLine>
           <CurrentLine>92</CurrentLine>
         </Doc>
         <Doc>

@@ -35,18 +35,18 @@
 #define VERSION		0x10080721
 /* in project */
 
-void handler_color_button(void); 
+uint8_t handler_color_button(void); 
+uint8_t state_save = 0;
+  
 uint32_t color_disp;
 uint32_t color_disp_old = 0;
 uint8_t start_select_color = 0;
-UINT16 brtnessold = 0; 
+
+UINT16 brtnessold = 0, brtnessnew = 0; 
 
 const UINT32 code  VALUE1 = 0xff0000, VALUE2 = 0x00ff00, VALUE3 = 0x0000ff;
-const UINT16 code BRTNESS = 0x000A;
 UINT32 VALUE1Ram,VALUE2Ram,VALUE3Ram;
 
-
-UINT16 BRIGHTNESSRam = 15; 
 //
 
 uint32_t xdata i,j,Tongle_Led =0;
@@ -77,11 +77,8 @@ main( )
 	LOADSAVEDATA(); // load gia tri luu trong APROM
 	mDelaymS(20);
 		
-	CH554WDTModeSelect(1);
-	CH554WDTFeed(0x00);	
-			 
+	ADC_Init();	 
 	Timer0_Init(8);								//50us
-	
 	Timer2_InputCapture_Init();
 
     if(!RGB_DataRam.Speed)
@@ -89,21 +86,38 @@ main( )
     RGB_SetSpeed(RGB_DataRam.Speed);
 
 	EA = 1; // enable interrup
-
+	mDelaymS(2);
 	color_disp = RGB_GREEN;
+	color_disp_old = color_disp;
+	brtnessnew = (ADC_Value * MAX_BRIGHTNESS) / 255;
+	brtnessold = brtnessnew;
 	RGB_DataRam.Effect = 0;
-	RGB_SetColor(color_disp, (BRIGHTNESSRam&0x00FF));
+	RGB_SetColor(color_disp, brtnessnew);
 	RGB_OnDisplay();
-	
+
+	CH554WDTModeSelect(1);
+	CH554WDTFeed(0x00);
 	while(1)
 	{
 		CH554WDTFeed(0x00);	
-		handler_color_button();
-		if(color_disp_old != color_disp || brtnessold != BRIGHTNESSRam) {
-		  RGB_SetColor(color_disp, (BRIGHTNESSRam&0x00FF));
+		state_save = handler_color_button();
+
+		brtnessnew = (ADC_Value * MAX_BRIGHTNESS) / 255; 
+
+		if(brtnessnew != brtnessold) {
+		   RGB_SetBright(brtnessnew);
+		   brtnessold = brtnessnew;  
+		}
+
+		if(color_disp_old != color_disp) {
+		  RGB_SetColor(color_disp, brtnessnew);
 		  color_disp_old = color_disp;
-		  brtnessold = BRIGHTNESSRam; 
-		}		
+		}
+
+		if(state_save == 1)	{
+			SAVEDATA();	
+			mDelaymS(1);	
+		}
 	}
 }
 
@@ -119,7 +133,7 @@ uint32_t color[16] = {RGB_RED, RGB_GREEN, RGB_BLUE, RGB_WHITE, RGB_ORANGE, RGB_G
 					RGB_YELLOW, RGB_CYAN, RGB_PURPLE, RGB_ORANGE3, RGB_PURPLE3, RGB_PURPLE2, RGB_BLUE3, RGB_BLUE4};
 uint32_t stat_but_dd = 0, stat_but_music = 0, stat_but_sp = 0;
 
-void handler_color_button(void) 
+uint8_t handler_color_button(void) 
 {
 	uint8_t tm_cnt = 0;
 
@@ -180,15 +194,6 @@ void handler_color_button(void)
 				stat_but_sp = 0;
 			}
 
-			if( (IR_Data == KEY_UP_MH)||(IR_Data==KEY_UP) ) {
-			   if(BRIGHTNESSRam < MAX_BRIGHTNESS)
-			   		BRIGHTNESSRam++;
-			}
-			else if( (IR_Data == KEY_DOWN_MH)||(IR_Data==KEY_DOWN) ) {
-			   if(BRIGHTNESSRam > 0)
-			   		BRIGHTNESSRam--;
-			}
-
 			Flag_IR_Convert = 0;
 		    IR_Data = 0;
 
@@ -211,24 +216,11 @@ void handler_color_button(void)
 		start_select_color = 0;	  /* if press button but not press key before release the button then start_select_color not reset to 0 in pressed loop*/
 		if(Flag_IR_Convert)
 		{
-
-			if( (IR_Data == KEY_UP_MH)||(IR_Data==KEY_UP) ) {
-			   if(BRIGHTNESSRam < MAX_BRIGHTNESS)
-			   		BRIGHTNESSRam++;
-			}
-			else if( (IR_Data == KEY_DOWN_MH)||(IR_Data==KEY_DOWN) ) {
-			   if(BRIGHTNESSRam > 0)
-			   		BRIGHTNESSRam--;
-			}
-
 		    Flag_IR_Convert = 0;
 		    IR_Data = 0;
 		}	 	
 	}	
-	if(tm_cnt != 0) {
-		SAVEDATA();
-		mDelaymS(1);
-	}
+	return tm_cnt;
 }
 
 
